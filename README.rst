@@ -17,11 +17,12 @@ QuickStart
 ==========
 
 Example
-=======
+-------
+::
 
 To run the example files, from the examples directory first run::
 
-	$ SomVarIUS pickle \
+	$ SomVarIUS pickle
 		--dbsnp chr20_dbsnp.bed
 		--dbsnp_out chr20_dbsnp.pickle
 
