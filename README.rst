@@ -16,6 +16,8 @@ Installation
 QuickStart
 ==========
 
+show how to run the code
+
 Example
 -------
 ::
