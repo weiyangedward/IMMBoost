@@ -1,0 +1,11 @@
+## This dir contains IMMBoost code that can be used in a single processor computer.
+
+## Todo:
+1. Go through the 'svm.v5.wrap.pl' and comment on each step as well as the scripts
+2. Modify each script to:
+    1) remove the use of slave node dir
+    2) remove dependency in '/shared-mounts/sinhas/lib/'
+    3) check the exist of BioPerl
+    4) change IMM and SVM path to relative path
+    5) change script name to Camel style
+    6) use 10% of the seq data and only 3 CRM sets as example data for the pipeline
