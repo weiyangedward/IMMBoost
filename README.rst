@@ -24,7 +24,7 @@ Example
 
 To run the example files, from the examples directory first run::
 
-	$ SomVarIUS pickle
+	$ IMMBoost pickle
 		--dbsnp chr20_dbsnp.bed
 		--dbsnp_out chr20_dbsnp.pickle
 
@@ -33,7 +33,7 @@ Invocation
 
 Running the following command will the available functions::
 
-	$ SomVarIUS -h
+	$ IMMBoost -h
 
 Gives::
 
