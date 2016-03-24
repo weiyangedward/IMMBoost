@@ -37,6 +37,16 @@ Note that LIBSVM and LIBLINEAR are both used in this code, license related issue
 	>> cd python
 	>> make
 
+3. Required packages and libraries
+----------------------------------
+::
+	
+	Several PERL modules and R packages are needed. Please make sure to have them installed before you run the code:
+
+	1) BioPerl (PERL)
+	2) randomForest (R)
+	3) ROCR (R)
+
 QuickStart
 ==========
 
@@ -54,7 +64,29 @@ QuickStart
 	
 	Output can be found in folder sampleOutput:
 	
-	1) 
+	1) CRM_vs_CRM/
+			+
+			+-- CRMset1/
+					+
+					+-- IMM.average.auc
+					+-- IMM_SVM.average.auc
+					+-- 
+					+-- allData/
+					+-- time1/
+							+
+							+-- fold1/
+							+-- fold2/
+							...
+					+-- time2/
+					...
+			+-- CRMset2/
+			...
+			+-- summaryAUC_msIMMBaseline.txt
+
+	2) CRM_vs_bkg/ (same file structure as above)
+
+	
+
 
 2. Data Format
 ===========
