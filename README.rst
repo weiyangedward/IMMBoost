@@ -16,27 +16,27 @@ Note that LIBSVM and LIBLINEAR are both used in this code, license related issue
 --------------------------
 ::
 
->> cd src
-::
-	
-	1) IMM:
-	>> cd imm
-	>> make clean
-	>> make
+	>> cd src
+	::
+		
+		1) IMM:
+		>> cd imm
+		>> make clean
+		>> make
 
-	2) liblinear:
-	>> cd liblinear-2.1
-	>> make clean
-	>> make
-	>> cd python
-	>> make
+		2) liblinear:
+		>> cd liblinear-2.1
+		>> make clean
+		>> make
+		>> cd python
+		>> make
 
-	3) libsvm:
-	>> cd libsvm-3.21
-	>> make clean
-	>> make
-	>> cd python
-	>> make
+		3) libsvm:
+		>> cd libsvm-3.21
+		>> make clean
+		>> make
+		>> cd python
+		>> make
 
 QuickStart
 ==========
