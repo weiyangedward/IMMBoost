@@ -44,7 +44,7 @@ QuickStart
 ----------
 ::
 
-Example data files for both of CRMvsCRM and CRMvsBkg are provided:
+	Example data files for both of CRMvsCRM and CRMvsBkg are provided:
 
 	1) CRMvsCRM:
 	>> sh run_crm_vs_crm.sh
@@ -52,7 +52,7 @@ Example data files for both of CRMvsCRM and CRMvsBkg are provided:
 	2) CRMvsBkg:
 	>> sh run_crm_vs_crm.sh
 	
-Output can be found in folder sampleOutput:
+	Output can be found in folder sampleOutput:
 	
 	1) 
 
