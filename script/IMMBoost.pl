@@ -53,7 +53,7 @@ sub CRM_vs_CRM {
       push @crmNames,$crm;
      `mkdir $outdir/$crm` unless (-d "$outdir/$crm");
      warn "train IMM model on $crm\n";
-     `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $indir $outdir`;
+     `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir`;
   }
   close IN;
   warn "Step1 is done!\n";
@@ -316,7 +316,7 @@ sub CRM_vs_bkg {
     `mkdir $outdir/$crm` unless (-d "$outdir/$crm");
     warn "train IMM model on $crm\n";
     my $prepareModelAndData = "$Bin/CRM_vs_bkg/prepareModelAndData.pl";
-    `perl $prepareModelAndData $indir $outdir`;
+    `perl $prepareModelAndData $Bin/../sampleData/$indir $outdir`;
   }
   close IN;
   warn "Step1 is done!\n";
@@ -552,10 +552,10 @@ sub CRM_vs_bkg {
 }
 
 sub IMMBoost {
-  if ($task == "crm_vs_bkg"){
+  if ($task eq "crm_vs_bkg"){
     CRM_vs_bkg();
   }
-  elsif ($task == "crm_vs_crm"){
+  elsif ($task eq "crm_vs_crm"){
     CRM_vs_CRM();
   }
   else {
