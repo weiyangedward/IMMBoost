@@ -117,26 +117,25 @@ QuickStart
 	
 	Input files including:
 
-	1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
-	2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
-	3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
-	4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
+	1. "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have a sub-folder called "fasta", inside which there are: 
+		1) CRM seq file "CRM.fasta"; 
+		2) random genomic seq "randomGenomicSeq.fasta"; 
+		3) msCRM seq file "msCRM.fasta" (if you don't have msCRM seq file, you can copy CRM.fasta over and change the seqID to species_seqID, e.g., Dmel_seqID); 
+		4) 
+
+	2. "../sampleOutput/CRM_vs_CRM/" : a directory for output files.
+
+	3. "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset.
+
+	4. "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
 
 
+3. To Run
+---------
+::
+
+	perl IMMBoost.pl [options] CRMList Outdir Datadir crmGroupTable
+
+	--task <str>      Two modes: 1) "--task crm_vs_bkg": classify CRM from background genomic seq; 2) "--task crm_vs_crm": classify CRM from other CRM seq
 
 
-
-
-
-Invocation
-==========
-
-Running the following command will the available functions::
-
-	$ IMMBoost -h
-
-Gives::
-
-
-License
-============
