@@ -1,7 +1,12 @@
 Introduction
 ============
 
-IMMBoost is a novel strategy to improve the performance in two classification tasks: 1) to distinguish CRMs in a particular expression domain from non-functional sequences; 2) to discriminate whether a CRM drives expression in one expression domain versus other domains.
+IMMBoost is a novel strategy to improve the 
+performance in two classification tasks: 1) to 
+distinguish CRMs in a particular expression domain 
+from non-functional sequences; 2) to discriminate 
+whether a CRM drives expression in one expression 
+domain versus other domains.
 
 Installation
 ============
@@ -10,7 +15,9 @@ Installation
 -----------
 ::
 
-Note that LIBSVM and LIBLINEAR are both used in this code, license related issue please see COPYRIGHT files. Also, source code IMM from SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
+Note that LIBSVM and LIBLINEAR are both used in this 
+code, license related issue please see COPYRIGHT files.
+ Also, source code IMM from SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
 
 2. Compile source code
 --------------------------
@@ -41,7 +48,9 @@ Note that LIBSVM and LIBLINEAR are both used in this code, license related issue
 ----------------------------------
 ::
 	
-	Several PERL modules and R packages are needed. Please make sure to have them installed before you run the code:
+	Several PERL modules and R packages are needed. 
+	Please make sure to have them installed before you 
+	run the code:
 
 	1) BioPerl (PERL)
 	2) randomForest (R)
