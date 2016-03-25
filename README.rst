@@ -15,34 +15,35 @@ Installation
 -----------
 ::
 
-Note that LIBSVM and LIBLINEAR are both used in this 
-code, license related issue please see COPYRIGHT files.
- Also, source code IMM from SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
+Note that LIBSVM and LIBLINEAR are both used in 
+this code, license related issue please see 
+COPYRIGHT files. Also, source code IMM from 
+SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
 
 2. Compile source code
 --------------------------
 ::
 
-	>> cd src
-		
-	1) IMM:
-	>> cd imm
-	>> make clean
-	>> make
+>> cd src
+	
+1) IMM:
+>> cd imm
+>> make clean
+>> make
 
-	2) liblinear:
-	>> cd liblinear-2.1
-	>> make clean
-	>> make
-	>> cd python
-	>> make
+2) liblinear:
+>> cd liblinear-2.1
+>> make clean
+>> make
+>> cd python
+>> make
 
-	3) libsvm:
-	>> cd libsvm-3.21
-	>> make clean
-	>> make
-	>> cd python
-	>> make
+3) libsvm:
+>> cd libsvm-3.21
+>> make clean
+>> make
+>> cd python
+>> make
 
 3. Required packages and libraries
 ----------------------------------
@@ -63,64 +64,64 @@ QuickStart
 ----------
 ::
 
-	Example data files for both of CRMvsCRM and CRMvsBkg are provided:
+Example data files for both of CRMvsCRM and CRMvsBkg are provided:
 
-	1) CRMvsCRM:
-	>> sh run_crm_vs_crm.sh
+1) CRMvsCRM:
+>> sh run_crm_vs_crm.sh
 
-	2) CRMvsBkg:
-	>> sh run_crm_vs_crm.sh
-	
-	Output can be found in folder sampleOutput:
-	
-	1) CRM_vs_CRM/
-			+
-			+-- CRMset1/
-					+
-					+-- IMM.average.auc
-					+-- IMM_SVM.average.auc
-					+-- IMM_RF.average.auc
-					+-- ensembleModel.average.auc
-					+-- kmerSVM.average.auc
-					+-- allData/
-					+-- time1/
-							+
-							+-- fold1/
-							+-- fold2/
-							...
-					+-- time2/
-					...
-			+-- CRMset2/
-			...
-			+-- summaryAUC_msIMMBaseline.txt
-			+-- summaryAUC_IMM_RF.txt
-			+-- summaryAUC_IMM_SVM.txt
-			+-- summaryAUC_ensembleModel.txt
-			+-- summaryAUC_kmerSVM.txt
+2) CRMvsBkg:
+>> sh run_crm_vs_crm.sh
 
-	2) CRM_vs_bkg/ (same file structure as above)
+Output can be found in folder sampleOutput:
 
-	Detailed performance please see summaryAUC*txt 
-	files. Each of these files corresponds to the 
-	average AUC scores over 10trials x 5folds cross 
-	validation. Each file has two columns, where the 
-	first column has CRMset names, and the second 
-	column has the average AUC scores. Note that since 
-	sampleData is just a random subset of real data, 
-	and therefore the performance in sampleOutput 
-	might not be ideal.
+1) CRM_vs_CRM/
+		+
+		+-- CRMset1/
+				+
+				+-- IMM.average.auc
+				+-- IMM_SVM.average.auc
+				+-- IMM_RF.average.auc
+				+-- ensembleModel.average.auc
+				+-- kmerSVM.average.auc
+				+-- allData/
+				+-- time1/
+						+
+						+-- fold1/
+						+-- fold2/
+						...
+				+-- time2/
+				...
+		+-- CRMset2/
+		...
+		+-- summaryAUC_msIMMBaseline.txt
+		+-- summaryAUC_IMM_RF.txt
+		+-- summaryAUC_IMM_SVM.txt
+		+-- summaryAUC_ensembleModel.txt
+		+-- summaryAUC_kmerSVM.txt
+
+2) CRM_vs_bkg/ (same file structure as above)
+
+Detailed performance please see summaryAUC*txt 
+files. Each of these files corresponds to the 
+average AUC scores over 10trials x 5folds cross 
+validation. Each file has two columns, where the 
+first column has CRMset names, and the second 
+column has the average AUC scores. Note that since 
+sampleData is just a random subset of real data, 
+and therefore the performance in sampleOutput 
+might not be ideal.
 
 
 2. Data Format
 --------------
 ::
 	
-	Input files including:
+Input files including:
 
-	1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
-	2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
-	3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
-	4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
+1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
+2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
+3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
+4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
 
 
 
