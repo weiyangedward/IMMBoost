@@ -121,8 +121,12 @@ QuickStart
 		1) CRM seq file "CRM.fasta"; 
 		2) random genomic seq "randomGenomicSeq.fasta"; 
 		3) msCRM seq file "msCRM.fasta" (if you don't have msCRM seq file, you can copy CRM.fasta over and change the seqID to species_seqID, e.g., Dmel_seqID); 
+<<<<<<< HEAD
 		4) negCRM.fasta
 		5) negmsCRM.fasta
+=======
+		4) 
+>>>>>>> c51c76c8e9a4be2c60addb164174ed299866bd7c
 
 	2. "../sampleOutput/CRM_vs_CRM/" : a directory for output files.
 
