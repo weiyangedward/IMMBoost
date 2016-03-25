@@ -1,0 +1,13 @@
+## to create a model
+./bin/Build-IMM -k 3 < data/test.fna > data/model
+
+## to run score the sequences
+./bin/Score data/model data/test1.fna
+
+
+################################################
+## another excersize
+./bin/Build-IMM -k 3 < data/test.fna > data/model.pos
+./bin/Build-IMM -k 3 < data/test1.fna > data/model.neg
+
+./bin/Score -n data/model.neg data/model.pos data/test.fna
