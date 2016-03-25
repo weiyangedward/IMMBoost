@@ -70,7 +70,9 @@ QuickStart
 					+
 					+-- IMM.average.auc
 					+-- IMM_SVM.average.auc
-					+-- 
+					+-- IMM_RF.average.auc
+					+-- ensembleModel.average.auc
+					+-- kmerSVM.average.auc
 					+-- allData/
 					+-- time1/
 							+
@@ -82,19 +84,26 @@ QuickStart
 			+-- CRMset2/
 			...
 			+-- summaryAUC_msIMMBaseline.txt
+			+-- summaryAUC_IMM_RF.txt
+			+-- summaryAUC_IMM_SVM.txt
+			+-- summaryAUC_ensembleModel.txt
+			+-- summaryAUC_kmerSVM.txt
 
 	2) CRM_vs_bkg/ (same file structure as above)
 
-	
+	Detailed performance please see summaryAUC*txt files. Each of these files corresponds to the average AUC scores over 10trials x 5folds cross validation. Each file has two columns, where the first column has CRMset names, and the second column has the average AUC scores. Note that since sampleData is just a random subset of real data, and therefore the performance in sampleOutput might not be ideal.
 
 
 2. Data Format
-===========
+--------------
+::
+	
+	Input files including:
 
-Input files including:
-
-1) 
-2) 
+	1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
+	2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
+	3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
+	4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
 
 
 
