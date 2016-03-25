@@ -103,12 +103,12 @@ QuickStart
 	Detailed performance please see summaryAUC*txt 
 	files. Each of these files corresponds to the 
 	average AUC scores over 10trials x 5folds cross 
-	validation. Each file has two columns, where the 
-	first column has CRMset names, and the second 
-	column has the average AUC scores. Note that since 
-	sampleData is just a random subset of real data, 
-	and therefore the performance in sampleOutput 
-	might not be ideal.
+	validation using one model. Each file has two 
+	columns, where the first column has CRMset names, 
+	and the second column has the average AUC scores. 
+	Note that since sampleData is just a random subset 
+	of real data, and therefore the performance in 
+	sampleOutput might not be ideal.
 
 
 2. Data Format
@@ -138,4 +138,8 @@ QuickStart
 
 	--task <str>      Two modes: 1) "--task crm_vs_bkg": classify CRM from background genomic seq; 2) "--task crm_vs_crm": classify CRM from other CRM seq
 
+
+Additional Information
+======================
+All questions please contact author Wei Yang throgh email: weiyang4 AT illinois DOT edu
 
