@@ -91,7 +91,15 @@ QuickStart
 
 	2) CRM_vs_bkg/ (same file structure as above)
 
-	Detailed performance please see summaryAUC*txt files. Each of these files corresponds to the average AUC scores over 10trials x 5folds cross validation. Each file has two columns, where the first column has CRMset names, and the second column has the average AUC scores. Note that since sampleData is just a random subset of real data, and therefore the performance in sampleOutput might not be ideal.
+	Detailed performance please see summaryAUC*txt 
+	files. Each of these files corresponds to the 
+	average AUC scores over 10trials x 5folds cross 
+	validation. Each file has two columns, where the 
+	first column has CRMset names, and the second 
+	column has the average AUC scores. Note that since 
+	sampleData is just a random subset of real data, 
+	and therefore the performance in sampleOutput 
+	might not be ideal.
 
 
 2. Data Format
