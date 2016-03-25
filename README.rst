@@ -17,8 +17,7 @@ Installation
 
 Note that LIBSVM and LIBLINEAR are both used in 
 this code, license related issue please see 
-COPYRIGHT files. Also, source code IMM from 
-SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
+COPYRIGHT files. Also, source code IMM from SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
 
 2. Compile source code
 --------------------------
@@ -49,9 +48,9 @@ SCRMshaw: http://veda.cs.uiuc.edu/SCRMshaw/ is used.
 ----------------------------------
 ::
 	
-Several PERL modules and R packages are needed. 
-Please make sure to have them installed before you 
-run the code:
+	Several PERL modules and R packages are needed. 
+	Please make sure to have them installed before you 
+	run the code:
 
 	1) BioPerl (PERL)
 	2) randomForest (R)
@@ -64,8 +63,7 @@ QuickStart
 ----------
 ::
 
-Example data files for both of CRMvsCRM and 
-CRMvsBkg are provided:
+	Example data files for both of CRMvsCRM and CRMvsBkg are provided:
 
 	1) CRMvsCRM:
 	>> sh run_crm_vs_crm.sh
@@ -102,15 +100,15 @@ CRMvsBkg are provided:
 
 	2) CRM_vs_bkg/ (same file structure as above)
 
-Detailed performance please see summaryAUC*txt 
-files. Each of these files corresponds to the 
-average AUC scores over 10trials x 5folds cross 
-validation. Each file has two columns, where the 
-first column has CRMset names, and the second 
-column has the average AUC scores. Note that since 
-sampleData is just a random subset of real data, 
-and therefore the performance in sampleOutput 
-might not be ideal.
+	Detailed performance please see summaryAUC*txt 
+	files. Each of these files corresponds to the 
+	average AUC scores over 10trials x 5folds cross 
+	validation. Each file has two columns, where the 
+	first column has CRMset names, and the second 
+	column has the average AUC scores. Note that since 
+	sampleData is just a random subset of real data, 
+	and therefore the performance in sampleOutput 
+	might not be ideal.
 
 
 2. Data Format
@@ -119,10 +117,10 @@ might not be ideal.
 	
 	Input files including:
 
-1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
-2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
-3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
-4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
+	1) "CRMsetsList.txt" : a list of path to CRMsets. Each CRMset folder should have 
+	2) "../sampleOutput/CRM_vs_CRM/" : a directory for output files
+	3) "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset, which contains 
+	4) "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
 
 
 
