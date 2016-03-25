@@ -121,14 +121,14 @@ QuickStart
 		1) CRM seq file "CRM.fasta"; 
 		2) random genomic seq "randomGenomicSeq.fasta"; 
 		3) msCRM seq file "msCRM.fasta" (if you don't have msCRM seq file, you can copy CRM.fasta over and change the seqID to species_seqID, e.g., Dmel_seqID); 
-		4) negCRM.fasta
-		5) negmsCRM.fasta
+		4) other CRM seq for CRM vs CRM task "negCRM.fasta"
+		5) other msCRM seq for CRM vs CRM task "negmsCRM.fasta"
 
-	2. "../sampleOutput/CRM_vs_CRM/" : a directory for output files.
+	2. "sampleOutput/CRM_vs_CRM/" : a directory for output files.
 
-	3. "../sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset.
+	3. "sampleData/CRMsets/" : a directory for data input. Each sub directory should be a CRMset.
 
-	4. "CRM.group.V3.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
+	4. "CRMGroup.txt" : a list of grouping of CRMsets, where each row is a group. How to define a "group" would be subjective to users or biological grouptruth in our case.
 
 
 3. To Run
