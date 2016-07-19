@@ -69,7 +69,7 @@ QuickStart
 	>> sh run_crm_vs_crm.sh
 
 	2) CRMvsBkg:
-	>> sh run_crm_vs_crm.sh
+	>> sh run_crm_vs_bkg.sh
 	
 	Output can be found in folder sampleOutput:
 	
@@ -121,8 +121,8 @@ QuickStart
 		1) CRM seq file "CRM.fasta"; 
 		2) random genomic seq "randomGenomicSeq.fasta"; 
 		3) msCRM seq file "msCRM.fasta" (if you don't have msCRM seq file, you can copy CRM.fasta over and change the seqID to species_seqID, e.g., Dmel_seqID); 
-		4) other CRM seq for CRM vs CRM task "negCRM.fasta"
-		5) other msCRM seq for CRM vs CRM task "negmsCRM.fasta"
+		4) negative CRM seq for CRM vs CRM task "negCRM.fasta"
+		5) negative msCRM seq for CRM vs CRM task "negmsCRM.fasta"
 
 	2. "sampleOutput/CRM_vs_CRM/" : a directory for output files.
 
