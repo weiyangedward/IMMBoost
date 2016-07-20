@@ -76,21 +76,19 @@ QuickStart
 	(descriptions of directory and files are shown within parentheses):
 	
 	1) CRM_vs_CRM/
+		+
+		+-- CRMset1/ (output directory of a CRMset)
 			+
-			+-- CRMset1/ (output directory of a CRMset)
-					+
-					+-- IMM.average.auc (average AUC from 
-					IMM prediction)
-					+-- IMM_SVM.average.auc (average AUC 
-					from IMMBoost-SVM prediction)
-					+-- IMM_RF.average.auc (average AUC from 
+			+-- IMM.average.auc (average AUC from IMM prediction)
+			+-- IMM_SVM.average.auc (average AUC from IMMBoost-SVM prediction)
+			+-- IMM_RF.average.auc (average AUC from 
 					IMMBoost-RF prediction)
-					+-- ensembleModel.average.auc (average 
+			+-- ensembleModel.average.auc (average 
 					AUC from IMMBoost-Ensemble prediction)
-					+-- kmerSVM.average.auc (average AUC 
+			+-- kmerSVM.average.auc (average AUC 
 					from kmer-SVM prediction)
-					+-- allData/
-					+-- time1/
+			+-- allData/
+			+-- time1/
 							+
 							+-- fold1/
 							+-- fold2/
