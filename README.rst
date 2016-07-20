@@ -63,7 +63,8 @@ QuickStart
 ----------
 ::
 
-	Examples of input as well as command to run the code are provided for both of CRM vs CRM and CRM vs Bkg:
+	Examples of input as well as command to run 
+	the code are provided for both of CRM vs CRM and CRM vs Bkg:
 
 	1) CRM vs CRM:
 	>> sh run_crm_vs_crm.sh
@@ -71,17 +72,18 @@ QuickStart
 	2) CRM vs Bkg:
 	>> sh run_crm_vs_bkg.sh
 	
-	Output can be found in folder 'sampleOutput' (descriptions of directory and files are marked by '#'):
+	Output can be found in folder 'sampleOutput' 
+	(descriptions of directory and files are marked by '#'):
 	
 	1) CRM_vs_CRM/
 			+
 			+-- CRMset1/ # output directory of a CRMset
 					+
-					+-- IMM.average.auc # average AUC score from IMM prediction
-					+-- IMM_SVM.average.auc
-					+-- IMM_RF.average.auc
-					+-- ensembleModel.average.auc
-					+-- kmerSVM.average.auc
+					+-- IMM.average.auc # average AUC from IMM prediction
+					+-- IMM_SVM.average.auc # average AUC from IMMBoost-SVM prediction
+					+-- IMM_RF.average.auc # average AUC from IMMBoost-RF prediction
+					+-- ensembleModel.average.auc # average AUC from IMMBoost-Ensemble prediction
+					+-- kmerSVM.average.auc # average AUC from kmer-SVM prediction
 					+-- allData/
 					+-- time1/
 							+
