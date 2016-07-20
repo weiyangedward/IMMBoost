@@ -14,17 +14,11 @@
 
 use strict;
 use warnings;
-# use lib '/shared-mounts/sinhas/lib/';
 use File::Basename;
 use Bio::SeqIO;
 use FindBin qw($Bin);
 
-# die "Usage: perl $0 CRMname OutDir timeNum foldNum\n" unless @ARGV==4;
 die `pod2text $0` if (@ARGV!=4);
-
-# my $tmpDir = $ENV{TMPDIR};
-# my $tmpModelDir = "$tmpDir/model";
-# `mkdir $tmpModelDir` unless (-e "$tmpModelDir");
 
 my $train = "$Bin/../../src/imm/bin/imm_build";
 my $pred = "$Bin/../../src/imm/bin/imm_score";
@@ -46,7 +40,10 @@ sub getNames
     }
 }
 
-# generate msIMM features for each seq in test and training sets
+#======================================
+# generate msIMM features for each seq 
+# in test and training sets
+#======================================
 sub pred {
         my $crmDir = "$modelDir/$crm";
         my $k = $timeNum;
@@ -55,7 +52,10 @@ sub pred {
         my $trainFa = "$crmDir/time$k/fold$i/train.crm.and.neg.fasta";
         my $testFa = "$crmDir/time$k/fold$i/test.crm.and.neg.fasta";
             
-        ##==== hash train data =======##
+        ##=================================
+        # read train data into hashTable
+        # key=id, value=seq_fa 
+        #==================================
         my %trainSeq = ();
         my $fa1 = Bio::SeqIO->new(-file=>$trainFa,-format=>'Fasta');
         while (my $curSeq = $fa1->next_seq()){
@@ -63,7 +63,10 @@ sub pred {
             my $seq = $curSeq->seq();
             $trainSeq{$id} = $seq;
         }      
-        ##====== hash test data ======
+        ##==============
+        # read test data into hashTable
+        # key=id, value=seq_fa
+        #===============
         my %testSeq = ();
         my $fa2 = Bio::SeqIO->new(-file=>$testFa,-format=>'Fasta');
         while (my $curSeq = $fa2->next_seq()){
@@ -71,8 +74,10 @@ sub pred {
             my $seq = $curSeq->seq();
             $testSeq{$id} = $seq;
         }
-        ##==== Build IMMs to generate IMM score features for training and test sequences 
-        ##====
+        ##==========================================
+        # Build IMMs and predict IMM scores as features
+        # for training and test sequences 
+        ##==========================================
 
         # store all of the IMM output
         my %output = ();
@@ -80,47 +85,68 @@ sub pred {
         {             
             my $crmFa = "$modelDir/$otherCRM/allData/msCRM.fasta";
             my $negFa = "$modelDir/$otherCRM/allData/msNeg.fasta";
-            ##===== hash msCRM data ======
+            ##===============================
+            # read msCRM data into hashTable
+            # key=id, value=seq_fa
+            #================================
             my %crmSeq = ();
             my %crmGeneralID = ();
-            my $fa3 = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta');
+            my $fa3 = "";
+            eval{$fa3 = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta')}; die $@ if $@;
             while (my $curSeq = $fa3->next_seq()){
                 my $id = $curSeq->id();
                 my $seq = $curSeq->seq();
                 $crmSeq{$id} = $seq;
             }
 
-            ##===== read msNeg data =====
+            ##============================
+            # read Neg data into hashTable
+            # key=id, value=seq_fa
+            #=============================
             my %negSeq = ();
             my %negGeneralID = ();
-            my $fa4 = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta');
+            my $fa4 = "";
+            eval{$fa4 = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta')}; die $@ if $@;
             while (my $curSeq = $fa4->next_seq()){
                 my $id = $curSeq->id();
                 my $seq = $curSeq->seq();
                 $negSeq{$id} = $seq;
             }
 
-            ##==== for each training seq, generate pos and neg training seq to train a msIMM, and then score this seq
-            ##====
+            ##===========================================
+            # for each training seq S:
+            # 1. generate pos and neg training seq
+            # 2. then use training to train IMM and
+            # score on S
+            ##===========================================
             for my $id (sort keys %trainSeq)
             {
                 ##==== Create test fasta files  ====
-                open OUT,">$homeDir/$id.fa";                   
+                eval{open OUT,">$homeDir/$id.fa"}; die $@ if $@;                   
                 print OUT ">$id\n$trainSeq{$id}\n";
                 close OUT;
-                ##==== read general ID ====
+                ##==== read in general seq ID ====
                 my $thisSeqGeneralID = $id;
                 if ($id =~ /(\w+?)_(\S+)/)
                 {
                     $thisSeqGeneralID = $2;
                 }
-                #==== create CRM training seq for msIMM, where seq that are the same as target seq or in test data are filtered since target seq will be used to train a model to pred on test data
-                #=====
-                open OUT,">$homeDir/$otherCRM.crms.fa";
+                #=========================================
+                # create CRM training seq for msIMM, 
+                # where seq that are the same as 
+                # target seq or in test data are filtered 
+                # so that no cheating when using target seq 
+                # to train a model and pred on test data
+                #=========================================
+                eval{open OUT,">$homeDir/$otherCRM.crms.fa"}; die $@ if $@;
                 for my $crmID (sort keys %crmSeq)
                 {
                     my $generalID = $2 if $crmID =~ /(\w+?)_(\S+)/;
-                    # add sequence to CRM training set if it is not the same as target sequences or in test set
+                    #==================================
+                    # add sequence to CRM training set 
+                    # if it is not the same as target 
+                    # sequences or in test set
+                    #==================================
                     if ($generalID ne $thisSeqGeneralID && !$testSeq{$generalID})
                     {
                         print OUT ">$crmID\n$crmSeq{$crmID}\n";
@@ -128,13 +154,20 @@ sub pred {
                 }
                 close OUT;
 
-                #=== Create neg training seq for msIMM, where seq that are the same as target seq or in test data are filtered
-                #====
+                #========================================
+                # Create neg training seq for msIMM, 
+                # where seq that are the same as 
+                # target seq or in test data are filtered
+                #========================================
                 open OUT,">$homeDir/$otherCRM.neg.fa";
                 for my $negID (sort keys %negSeq)
                 {
                     my $generalID = $2 if $negID =~ /(\w+?)_(\S+)/;
-                    ## add sequence to CRM training set if it is not the same as target sequences or in test set
+                    ##================================= 
+                    # add sequence to CRM training set 
+                    # if it is not the same as target 
+                    # sequences or in test set
+                    #==================================
                     if ($generalID ne $thisSeqGeneralID && !$testSeq{$generalID})
                     {
                         print OUT ">$negID\n$negSeq{$negID}\n";
@@ -142,13 +175,15 @@ sub pred {
                 }
                 close OUT;
 
-                ##==== Train msIMM and score target seq ====
+                ##================================
+                # Train msIMM and score target seq 
+                #=================================
                 `$train -r -k 6 < $homeDir/$otherCRM.neg.fa > $homeDir/$otherCRM.neg.model`;
                 `$train -r -k 6 < $homeDir/$otherCRM.crms.fa > $homeDir/$otherCRM.crms.model`;
                 my $crmModel = "$homeDir/$otherCRM.crms.model";
                 my $negModel = "$homeDir/$otherCRM.neg.model";
 
-                ## hash pred score
+                ## add pred score to hashTable
                 $output{"train"}{$id}{$otherCRM} = `$pred -f -n $negModel $crmModel $homeDir/$id.fa`;
 
                 # delete intermediate files
@@ -157,20 +192,22 @@ sub pred {
                 `rm $homeDir/$id.fa`;
                 `rm $homeDir/$otherCRM.crms.model`;
                 `rm $homeDir/$otherCRM.neg.model`; 
-                ##==== delete everything in tmp directory
-                # `rm -rf $homeDir/*`;
             }
             
-            ##==== for each test seq, generate pos and neg training seq to train a msIMM, and then score this seq
-            ##====   
+            ##====================================
+            # for each test seq S: 
+            # 1. generate pos and neg training seq
+            # 2. then use training to train IMM and
+            # score on S
+            ##=====================================
             for my $id (sort keys %testSeq)
             {
-                ##= Create test fasta files  
-                open OUT,">$homeDir/$id.fa";
+                ## Create test fasta files  
+                eval{open OUT,">$homeDir/$id.fa"}; die $@ if $@;
                 print OUT ">$id\n$testSeq{$id}\n";
                 close OUT;
-                ##== Create training CRMs for IMM ==
-                open OUT,">$homeDir/$otherCRM.crms.fa";
+                ## Create training CRMs for IMM ==
+                eval{open OUT,">$homeDir/$otherCRM.crms.fa"}; die $@ if $@;
                 for my $crmID (sort keys %crmSeq)
                 {
                     my $generalID = $2 if $crmID =~ /(\w+?)_(\S+)/;
@@ -180,7 +217,9 @@ sub pred {
                     }
                 }
                 close OUT;
-                ##====== Create training neg data for IMM ==========##
+                ##================================
+                # Create training neg data for IMM 
+                #=================================
                 open OUT,">$homeDir/$otherCRM.neg.fa";
                 for my $negID (sort keys %negSeq)
                 {
@@ -196,7 +235,7 @@ sub pred {
                 `$train -r -k 6 < $homeDir/$otherCRM.crms.fa > $homeDir/$otherCRM.crms.model`;
                 my $crmModel = "$homeDir/$otherCRM.crms.model";
                 my $negModel = "$homeDir/$otherCRM.neg.model";
-                ##==== Store prediction into a hash table ====##
+                ##==== add pred score to hash table ====
                 $output{"test"}{$id}{$otherCRM} = `$pred -f -n $negModel $crmModel $homeDir/$id.fa`;
 
                 # delete intermediate files
@@ -205,12 +244,12 @@ sub pred {
                 `rm $homeDir/$id.fa`;
                 `rm $homeDir/$otherCRM.crms.model`;
                 `rm $homeDir/$otherCRM.neg.model`;
-                ##==== delete everything in tmp directory
-                # `rm -rf $homeDir/*`;
             }
         }
-        ##====== Output IMM features for training sequences ======##
-        open OUT1,">$homeDir/train.ensembFeat";
+        ##==========================================
+        # Output IMM features for training sequences 
+        #===========================================
+        eval{open OUT1,">$homeDir/train.ensembFeat"}; die $@ if $@;
         print OUT1 "crm\t";
         for my $crm (sort @crmNames){
             print OUT1 "$crm\t";
@@ -229,8 +268,10 @@ sub pred {
         }
         close OUT1;
 
-        ##======= output test seq msIMM features to file ====
-        open OUT2,">$homeDir/test.ensembFeat";
+        ##======================================
+        # output test seq msIMM features to file 
+        #=======================================
+        eval{open OUT2,">$homeDir/test.ensembFeat"}; die $@ if $@;
         print OUT2 "crm\t";
         for my $crm (sort @crmNames){
             print OUT2 "$crm\t";
@@ -247,9 +288,6 @@ sub pred {
             print OUT2 "\n";
         }
         close OUT2;
-        ##====== Move feature files to local directories ======##
-        # `mv $homeDir/test.ensembFeat $crmDir/time$k/fold$i/test.ensembFeat`;
-        # `mv $homeDir/train.ensembFeat $crmDir/time$k/fold$i/train.ensembFeat`;
 }
 
 # call functions

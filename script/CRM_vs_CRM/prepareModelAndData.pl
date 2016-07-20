@@ -1,9 +1,8 @@
 =head1 Description
   
   This script creates cross validation sets for
-    classification test with CRMs regulate expression
-    in a specific domain as positive data
-    and CRMs regulate other domains as negative data.
+    classification test with CRMs of one specific expression
+    domain as positive data and other CRMs as negative data.
     Note that BioPerl is needed.
 
 =head1 Usage
@@ -37,13 +36,14 @@ my $crm = (split /\//,$crmDir)[-1];
 my (%crmSeq,@crmSeqID,%negSeq,@negSeqID,
     $crmNum,$negNum,@crmSeqIDrand,@negSeqIDrand);
 
-##========= 
-# store CRMs seq
-##=========
+##==============
+# read in CRMs seq
+##==============
 my %crmGeneralID = ();  ## msCRM general ID
 my %msCRMSeq = ();      ## msCRM ID
 sub parseCRM {
-    my $fa = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta');
+    my $fa = "";
+    eval{$fa = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta')}; die $@ if $@;
     while (my $nextSeq = $fa->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -52,7 +52,8 @@ sub parseCRM {
         $crmNum ++;
     }
 
-    my $fa2 = Bio::SeqIO->new(-file=>$msCRM,-format=>'Fasta');
+    my $fa2 = "";
+    eval{$fa2 = Bio::SeqIO->new(-file=>$msCRM,-format=>'Fasta')}; die $@ if $@;
     while (my $curSeq = $fa2->next_seq()){
         my $id = $curSeq->id();
         my $seq = $curSeq->seq();
@@ -61,13 +62,14 @@ sub parseCRM {
         $crmGeneralID{$generalID} = 1;
     }
 }
-##====== 
-# store negative data 
-##======
+##=====================
+# read in negative data 
+##=====================
 my %negGeneralID = ();
 my %msNegSeq = ();
 sub parseNeg {
-    my $fa = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta');
+    my $fa = "";
+    eval{$fa = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta')}; die $@ if $@;
     while (my $nextSeq = $fa->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -76,7 +78,8 @@ sub parseNeg {
         $negNum ++;
     }
 
-    my $fa1 = Bio::SeqIO->new(-file=>$msNeg,-format=>'Fasta');
+    my $fa1 = "";
+    eval{$fa1 = Bio::SeqIO->new(-file=>$msNeg,-format=>'Fasta')}; die $@ if $@;
     while (my $nextSeq = $fa1->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -85,16 +88,16 @@ sub parseNeg {
         $negGeneralID{$generalID} = 1;
     }
 }
-##======= 
+##==================
 # Create directories 
-##=======
+##==================
 sub createDir{
     for (my $k=1; $k<=10; $k++)
     {
-        `mkdir $outdir/$crm/time$k/` unless (-d "$outdir/$crm/time$k/");
+        `mkdir -p $outdir/$crm/time$k/`;
         for (my $i = 1; $i<=5; $i++)
         {
-            `mkdir $outdir/$crm/time$k/fold$i` unless (-d "$outdir/$crm/time$k/fold$i");
+            `mkdir -p $outdir/$crm/time$k/fold$i`;
         }
     }
 }
@@ -119,10 +122,10 @@ sub sepData {
             $crmEnd = floor(($i/5) * $crmNum) - 1;
             $negEnd = floor(($i/5) * $negNum) - 1;
 
-            open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta";
-            open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta";
-            open OUT3,">$outdir/$crm/time$k/fold$i/test.label";
-            open OUT4,">$outdir/$crm/time$k/fold$i/train.label";
+            eval{open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta"}; die $@ if $@;
+            eval{open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta"}; die $@ if $@;
+            eval{open OUT3,">$outdir/$crm/time$k/fold$i/test.label"}; die $@ if $@;
+            eval{open OUT4,">$outdir/$crm/time$k/fold$i/train.label"}; die $@ if $@;
 
             my %trainCRM = ();
             for (my $j=0; $j<=$crmNum-1;$j++){
@@ -152,8 +155,8 @@ sub sepData {
             }
             close OUT2;
 
-            open OUT1,">$outdir/$crm/time$k/fold$i/test.neg.fasta";
-            open OUT2,">$outdir/$crm/time$k/fold$i/train.neg.fasta";
+            eval{open OUT1,">$outdir/$crm/time$k/fold$i/test.neg.fasta"}; die $@ if $@;
+            eval{open OUT2,">$outdir/$crm/time$k/fold$i/train.neg.fasta"}; die $@ if $@;
 
             my %trainNeg = ();
             for (my $j=0;$j<=$negNum-1;$j++)
@@ -184,6 +187,7 @@ sub sepData {
             close OUT2;
             close OUT3;
             close OUT4;
+
             $crmStart = $crmEnd + 1;
             $negStart = $negEnd + 1;
             `cat $outdir/$crm/time$k/fold$i/test.crm.fasta $outdir/$crm/time$k/fold$i/test.neg.fasta > $outdir/$crm/time$k/fold$i/test.crm.and.neg.fasta`;
@@ -199,7 +203,7 @@ sub sepData {
 # classification model
 ##==================================================
 sub trainAllData {
-    `mkdir $outdir/$crm/allData` unless (-e "$outdir/$crm/allData");
+    `mkdir -p $outdir/$crm/allData`;
     #==================
     # train msCRM model 
     #==================

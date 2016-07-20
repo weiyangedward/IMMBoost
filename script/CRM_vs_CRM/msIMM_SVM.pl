@@ -53,7 +53,7 @@ for (my $k=1;$k<=10;$k++)
         `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.filGroup2.Dmel.lib > $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled`;
         ##======== liblinear prediction ========##
         #`python $liblinear $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled > $homeDir/liblinear.log`;
-        `python $libsvm $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled > $homeDir/liblinear.log`;
+        eval{`python $libsvm $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled > $homeDir/liblinear.log`}; die $@ if $@;
         my @label = ();
         open TEST,"$homeDir/test.ensembFeat.filGroup2.lib";
         while (<TEST>){

@@ -11,6 +11,7 @@ install: $(BIN)/imm_build $(BIN)/imm_score
 #cp $(BIN)/* $(PREFIX)/bin
 
 all: $(BIN)/imm_build $(BIN)/imm_score
+	chmod 755 $(BIN)/*
 
 $(OBJ)/%.o: $(SRC)/%.cpp
 	$(CC) $(CCFLAGS) -c $< -o $@  

@@ -50,12 +50,12 @@ sub CRM_vs_CRM {
   open IN,$crmLst;
   while (<IN>)
   {
-      chomp(my $indir = $_);
-      my $crm = (split /\//,$indir)[-1];
-      push @crmNames,$crm;
-     `mkdir -p $outdir/$crm` unless (-d "$outdir/$crm");
-     warn "train IMM model on $crm\n";
-     `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir`;
+    chomp(my $indir = $_);
+    my $crm = (split /\//,$indir)[-1];
+    push @crmNames,$crm;
+    `mkdir -p $outdir/$crm`;
+    warn "train IMM model on $crm\n";
+    `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir`;
   }
   close IN;
   warn "Step1 is done!\n";
@@ -67,19 +67,19 @@ sub CRM_vs_CRM {
   warn "Step2 Generate msIMM score features...\n";
   for my $crm (@crmNames)
   {
-     warn "$crm\n";
-     for (my $k=1;$k<=10;$k++)
-     {
-         for (my $i=1;$i<=5;$i++)
-         {
-             warn "trial$k fold$i\n";
-             `perl $Bin/CRM_vs_CRM/generateIMMScoreFeature.pl $crm $outdir $k $i`;
-         }
-     }
+    warn "$crm\n";
+    for (my $k=1;$k<=10;$k++)
+    {
+      for (my $i=1;$i<=5;$i++)
+      {
+        warn "trial$k fold$i\n";
+        `perl $Bin/CRM_vs_CRM/generateIMMScoreFeature.pl $crm $outdir $k $i`;
+      }
+    }
   }
-  warn "fil group...\n";
+  warn "filter msCRMs in the same group...\n";
   `perl $Bin/CRM_vs_CRM/filterGroupCRM.pl $datadir $outdir $crmGroupTable`;
-  warn "fil Dmel...\n";
+  warn "filter Dmel CRMs in the same group...\n";
   `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable`;
   warn "Step2 is done!\n";
 
@@ -87,7 +87,7 @@ sub CRM_vs_CRM {
   # Step3.1:
   # msIMM baseline
   ##==============
-  warn "Step3.1 msIMM baseline...\n";
+  warn "Step3.1 msIMM prediction...\n";
   for my $crm (@crmNames){
     warn "$crm\n";
     `perl $Bin/CRM_vs_CRM/msIMMBaseline.pl $crm $outdir`;
@@ -102,21 +102,21 @@ sub CRM_vs_CRM {
   open OUT,">$outdir/summaryAUC_msIMMBaseline.txt";
   for my $crm (@crmNames)
   {
-         if (-e "$outdir/$crm/IMM.average.auc")
-         {
-             print OUT "$crm\t";
-             open IN,"$outdir/$crm/IMM.average.auc";
-             while (<IN>)
-             {
-                 chomp(my $second = $_);
-                 my $aucValue = (split /\s+/,$second)[-1];
-                 print OUT "$aucValue\n";
-             }
-             close IN;
-         }
-         else{
-             print OUT "$crm\t-\n";
-         }
+    if (-e "$outdir/$crm/IMM.average.auc")
+    {
+       print OUT "$crm\t";
+       open IN,"$outdir/$crm/IMM.average.auc";
+       while (<IN>)
+       {
+           chomp(my $second = $_);
+           my $aucValue = (split /\s+/,$second)[-1];
+           print OUT "$aucValue\n";
+       }
+       close IN;
+   }
+   else{
+       print OUT "$crm\t-\n";
+   }
   }
   close OUT;
   warn "Step3.2 is done!\n";
@@ -132,7 +132,6 @@ sub CRM_vs_CRM {
     `perl $Bin/CRM_vs_CRM/msIMM_SVM.pl $crm $outdir`;
   }
   warn "Step4.1 is done!\n";
-
 
 
   ##============================
@@ -163,10 +162,10 @@ sub CRM_vs_CRM {
   warn "Step4.2 is done!\n";
 
 
-  ##======== 
+  ##=================
   # Step5.1:
   # IMM-RF prediction 
-  ##========
+  ##=================
   warn "Step5.1 IMM-RF prediction...\n";
   for my $crm (@crmNames){
     warn "$crm\n";
@@ -174,39 +173,39 @@ sub CRM_vs_CRM {
   }
   warn "Step5.1 is done!\n";
 
-  ##======== 
+  ##=====================
   # Step5.2:
   # Summarize IMM-RF AUCs 
-  ##========
+  ##=====================
   warn "Step5.2 Summarize IMM-RF AUCs...\n";
   open OUT,">$outdir/summaryAUC_IMM_RF.txt";
   for my $crm (@crmNames)
   {
-         if (-e "$outdir/$crm/IMM_RF.average.auc")
-         {
-             print OUT "$crm\t";
-             open IN,"$outdir/$crm/IMM_RF.average.auc";
-             while (<IN>)
-             {
-                 chomp(my $second = $_);
-                 my $aucValue = (split /\s+/,$second)[-1];
-                 print OUT "$aucValue\n";
-             }
-             close IN;
-         }
-         else{
-             print OUT "$crm\t-\n";
-         }
+   if (-e "$outdir/$crm/IMM_RF.average.auc")
+   {
+       print OUT "$crm\t";
+       open IN,"$outdir/$crm/IMM_RF.average.auc";
+       while (<IN>)
+       {
+           chomp(my $second = $_);
+           my $aucValue = (split /\s+/,$second)[-1];
+           print OUT "$aucValue\n";
+       }
+       close IN;
+   }
+   else{
+       print OUT "$crm\t-\n";
+   }
   }
   close OUT;
   warn "Step5.2 is done!\n";
 
 
 
-  ##======= 
+  ##==================================
   # Step6.1:
   # generate kmer features for kmerSVM 
-  ##=======
+  ##==================================
   warn "Step6.1 generate kmer features for kmerSVM...\n";
   for my $crm (@crmNames)
   {
@@ -228,10 +227,10 @@ sub CRM_vs_CRM {
   }
   warn "Step6.2 is done!\n";
 
-  ##======= 
+  ##=====================
   # Step6.3:
   # Summarize kmerSVM AUC 
-  ##=======
+  ##=====================
   warn "Step6.3 Summarize kmerSVM AUC...\n";
   open OUT,">$outdir/summaryAUC_kmerSVM.txt";
   for my $crm (@crmNames)
@@ -256,10 +255,10 @@ sub CRM_vs_CRM {
   warn "Step6.3 is done!\n";
 
 
-  ##=========== 
+  ##===================
   # Step7.1:
   # Ensemble prediction 
-  ##===========
+  ##===================
   warn "Step7.1 Ensemble prediction...\n";
   for my $crm (@crmNames)
   {
@@ -269,10 +268,10 @@ sub CRM_vs_CRM {
   warn "Step7.1 is done!\n";
 
 
-  ##==========
+  ##===========================
   # Step7.2:
   # summarize ensembleModel AUC 
-  ##==========
+  ##===========================
   warn "Step7.1 summarize ensembleModel AUC...\n";
   open OUT,">$outdir/summaryAUC_ensembleModel.txt";
   for my $crm (@crmNames)
@@ -295,7 +294,7 @@ sub CRM_vs_CRM {
   }
   close OUT;
   warn "Step7.2 is done!\n";
-
+  warn "All steps are doen!\n";
 }
 
 
@@ -318,7 +317,7 @@ sub CRM_vs_bkg {
     chomp(my $indir = $_);
     my $crm = (split /\//,$indir)[-1];
     push @crmNames,$crm;
-    `mkdir $outdir/$crm` unless (-d "$outdir/$crm");
+    `mkdir -p $outdir/$crm`;
     warn "train IMM model on $crm\n";
     my $prepareModelAndData = "$Bin/CRM_vs_bkg/prepareModelAndData.pl";
     `perl $prepareModelAndData $Bin/../sampleData/$indir $outdir`;
@@ -326,10 +325,10 @@ sub CRM_vs_bkg {
   close IN;
   warn "Step1 is done!\n";
 
-  ##======== 
+  ##=============================================
   # Step2: 
   # Generate msIMM score as features for each seq
-  ##========
+  ##=============================================
   warn "Step2 Generate msIMM score features...\n";
   for my $crm (@crmNames)
   {
@@ -558,10 +557,10 @@ sub CRM_vs_bkg {
 
 sub IMMBoost {
   if ($task eq "crm_vs_bkg"){
-    CRM_vs_bkg();
+    eval{CRM_vs_bkg()}; die $@ if $@;
   }
   elsif ($task eq "crm_vs_crm"){
-    CRM_vs_CRM();
+    eval{CRM_vs_CRM()}; die $@ if $@;
   }
   else {
     die `pod2text $0`;
