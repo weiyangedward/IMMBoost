@@ -5,8 +5,8 @@ IMMBoost is a novel strategy to improve the
 performance in two classification tasks: 1) to 
 distinguish CRMs in a particular expression domain 
 from non-functional sequences; 2) to discriminate 
-whether a CRM drives expression in one expression 
-domain versus other domains.
+CRMs drive expression in one expression 
+domain versus the others.
 
 Installation
 ============
@@ -63,21 +63,21 @@ QuickStart
 ----------
 ::
 
-	Example data files for both of CRMvsCRM and CRMvsBkg are provided:
+	Examples of input as well as command to run the code are provided for both of CRM vs CRM and CRM vs Bkg:
 
-	1) CRMvsCRM:
+	1) CRM vs CRM:
 	>> sh run_crm_vs_crm.sh
 
-	2) CRMvsBkg:
+	2) CRM vs Bkg:
 	>> sh run_crm_vs_bkg.sh
 	
-	Output can be found in folder sampleOutput:
+	Output can be found in folder 'sampleOutput' (descriptions of directory and files are marked by '#'):
 	
 	1) CRM_vs_CRM/
 			+
-			+-- CRMset1/
+			+-- CRMset1/ # output directory of a CRMset
 					+
-					+-- IMM.average.auc
+					+-- IMM.average.auc # average AUC score from IMM prediction
 					+-- IMM_SVM.average.auc
 					+-- IMM_RF.average.auc
 					+-- ensembleModel.average.auc
