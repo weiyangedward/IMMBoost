@@ -35,16 +35,16 @@ my $outdir = $ARGV[1]; # outdir
 my $datadir = $ARGV[2];
 my $crmGroupTable = $ARGV[3];
 
-#===========
-# CRM_vs_CRM 
-#===========
+#=================
+# Task: CRM_vs_CRM 
+#=================
 sub CRM_vs_CRM {
-  #=========
+  #============================================
   # Step1:
   # for each CRM set, train a msIMM model and 
   # generate 10trials x 5folds cross validation 
   # test and training data
-  #========
+  #============================================
   warn "Step1 prepare Model And Data...\n";
   my @crmNames = ();
   open IN,$crmLst;
@@ -53,17 +53,17 @@ sub CRM_vs_CRM {
       chomp(my $indir = $_);
       my $crm = (split /\//,$indir)[-1];
       push @crmNames,$crm;
-     `mkdir $outdir/$crm` unless (-d "$outdir/$crm");
+     `mkdir -p $outdir/$crm` unless (-d "$outdir/$crm");
      warn "train IMM model on $crm\n";
      `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir`;
   }
   close IN;
   warn "Step1 is done!\n";
 
-  ##======== 
+  ##=============================================
   # Step2: 
   # Generate msIMM score as features for each seq
-  ##========
+  ##=============================================
   warn "Step2 Generate msIMM score features...\n";
   for my $crm (@crmNames)
   {
@@ -83,10 +83,10 @@ sub CRM_vs_CRM {
   `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable`;
   warn "Step2 is done!\n";
 
-  ##======== 
+  ##==============
   # Step3.1:
   # msIMM baseline
-  ##========
+  ##==============
   warn "Step3.1 msIMM baseline...\n";
   for my $crm (@crmNames){
     warn "$crm\n";
@@ -94,10 +94,10 @@ sub CRM_vs_CRM {
   }
   warn "Step3.1 is done!\n";
 
-  ##====== 
+  ##====================
   # Step3.2:
   # Summarize msIMM AUCs
-  ##======
+  ##====================
   warn "Step3.2 Summarize msIMM AUCs...\n";
   open OUT,">$outdir/summaryAUC_msIMMBaseline.txt";
   for my $crm (@crmNames)
@@ -121,10 +121,10 @@ sub CRM_vs_CRM {
   close OUT;
   warn "Step3.2 is done!\n";
 
-  ##======== 
+  ##==================
   # Step4.1:
   # IMM-SVM prediction 
-  ##========
+  ##==================
   warn "Step4.1 IMM-SVM prediction...\n";
   for my $crm (@crmNames)
   {
@@ -135,10 +135,10 @@ sub CRM_vs_CRM {
 
 
 
-  ##======== 
+  ##============================
   # Step4.2:
   # Summarize IMM-SVM prediction 
-  ##========
+  ##============================
   warn "Step4.2 Summarize IMM-SVM AUCs...\n";
   open OUT,">$outdir/summaryAUC_IMM_SVM.txt";
   for my $crm (@crmNames)
@@ -216,10 +216,10 @@ sub CRM_vs_CRM {
   warn "Step6.1 is done!\n";
 
 
-  ##======== 
+  ##==================
   # Step6.2:
   # kmerSVM prediction 
-  ##========
+  ##==================
   warn "Step6.2 kmerSVM prediction...\n";
   for my $crm (@crmNames)
   {
@@ -298,15 +298,18 @@ sub CRM_vs_CRM {
 
 }
 
-#======= CRM_vs_bkg =========
+
+#================= 
+# Task: CRM_vs_bkg 
+#=================
 sub CRM_vs_bkg {
 
-  #=========
+  #============================================
   # Step1:
   # for each CRM set, train a msIMM model and 
   # generate 10trials x 5folds cross validation 
   # test and training data
-  #========
+  #============================================
   warn "Step1 prepare Model And Data...\n";
   my @crmNames = (); # an array to store CRMnames
   open IN,$crmLst;

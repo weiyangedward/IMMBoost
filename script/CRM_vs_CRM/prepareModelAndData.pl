@@ -1,9 +1,10 @@
 =head1 Description
   
   This script creates cross validation sets for
-    classification test with CRM seq as positive data
-    and other CRM seq as negative data Note that 
-    BioPerl is needed.
+    classification test with CRMs regulate expression
+    in a specific domain as positive data
+    and CRMs regulate other domains as negative data.
+    Note that BioPerl is needed.
 
 =head1 Usage
 
@@ -18,8 +19,8 @@ use List::Util qw(shuffle);
 use Bio::SeqIO;
 use POSIX;
 
-# die "Usage: perl $0 CRM.dir Outdir\n" unless @ARGV==2;
 die `pod2text $0` if (@ARGV!=2);
+
 my $crmDir = $ARGV[0];
 my $outdir = $ARGV[1];
 
@@ -97,10 +98,10 @@ sub createDir{
         }
     }
 }
-##==========
+##===============================================
 # Create 10 trials x 5-fold cross validation sets
 # by randomly partition the CRM and neg sets
-##==========
+##===============================================
 sub sepData {
     
     for (my $k=1;$k<=10;$k++)
@@ -191,15 +192,17 @@ sub sepData {
     }
 }
 
-##====== 
+##==================================================
 # train msIMM for each CRM set, these msIMMs will be 
 # used to score test and training data, after which
 # the pred score will be used as feature to train a 
 # classification model
-##=======
+##==================================================
 sub trainAllData {
     `mkdir $outdir/$crm/allData` unless (-e "$outdir/$crm/allData");
-    ##====== train msCRM model ========##
+    #==================
+    # train msCRM model 
+    #==================
     `$train -r -k 6 < $msNeg > $outdir/$crm/allData/neg.model`; 
     `$train -r -k 6 < $msCRM > $outdir/$crm/allData/crm.model`;
     `cp $msCRM $outdir/$crm/allData/msCRM.fasta`;
