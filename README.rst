@@ -76,32 +76,30 @@ QuickStart
 	(descriptions of directory and files are shown within parentheses):
 	
 	1) CRM_vs_CRM/
-		+
-		+-- CRMset1/ (output directory of a CRMset)
+	+
+	+-- CRMset1/ (output directory of a CRMset)
 			+
 			+-- IMM.average.auc (average AUC from IMM prediction)
 			+-- IMM_SVM.average.auc (average AUC from IMMBoost-SVM prediction)
-			+-- IMM_RF.average.auc (average AUC from 
-					IMMBoost-RF prediction)
-			+-- ensembleModel.average.auc (average 
-					AUC from IMMBoost-Ensemble prediction)
-			+-- kmerSVM.average.auc (average AUC 
-					from kmer-SVM prediction)
-			+-- allData/
-			+-- time1/
-							+
-							+-- fold1/
-							+-- fold2/
-							...
-					+-- time2/
-					...
-			+-- CRMset2/
+			+-- IMM_RF.average.auc (average AUC from IMMBoost-RF prediction)
+			+-- ensembleModel.average.auc (average AUC from IMMBoost-Ensemble prediction)
+			+-- kmerSVM.average.auc (average AUC from kmer-SVM prediction)
+			+-- allData/ ()
+			+-- time1/ ()
+				+
+				+-- fold1/ ()
+				...
+				+-- fold5/
 			...
-			+-- summaryAUC_msIMMBaseline.txt
-			+-- summaryAUC_IMM_RF.txt
-			+-- summaryAUC_IMM_SVM.txt
-			+-- summaryAUC_ensembleModel.txt
-			+-- summaryAUC_kmerSVM.txt
+			+-- time10/
+	+-- CRMset2/
+		...
+	+-- CRMsetk/
+	+-- summaryAUC_msIMMBaseline.txt
+	+-- summaryAUC_IMM_RF.txt
+	+-- summaryAUC_IMM_SVM.txt
+	+-- summaryAUC_ensembleModel.txt
+	+-- summaryAUC_kmerSVM.txt
 
 	2) CRM_vs_bkg/ (same file structure as above)
 
