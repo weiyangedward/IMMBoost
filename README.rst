@@ -64,7 +64,11 @@ QuickStart
 ::
 
 	Examples of input as well as command to run 
-	the code are provided for both of CRM vs CRM and CRM vs Bkg:
+	the code are provided for both of CRM vs CRM and CRM vs 
+	Bkg. Output can be found in folder 'sampleOutput' (
+	Please empty this folder before your new runs! This is 
+	extremely important since not doing so will cause errors 
+	or bugs in the final results):
 
 	1) CRM vs CRM:
 	>> sh run_crm_vs_crm.sh
@@ -72,7 +76,8 @@ QuickStart
 	2) CRM vs Bkg:
 	>> sh run_crm_vs_bkg.sh
 	
-	Output can be found in folder 'sampleOutput' (Please empty this folder before your new runs! This is extremely important since not doing so will cause errors or bugs in the final results). Descriptions of directory and files are shown within parentheses:
+	Descriptions of directory and files are shown within 
+	parentheses:
 	
 	1) CRM_vs_CRM/
 	+
