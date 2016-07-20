@@ -78,23 +78,22 @@ QuickStart
 	1) CRM_vs_CRM/
 	+
 	+-- CRMset1/ (output directory of a CRMset)
+		+
+		+-- IMM.average.auc (average AUC from IMM prediction)
+		+-- IMM_SVM.average.auc (average AUC from IMMBoost-SVM prediction)
+		+-- IMM_RF.average.auc (average AUC from IMMBoost-RF prediction)
+		+-- ensembleModel.average.auc (average AUC from IMMBoost-Ensemble prediction)
+		+-- kmerSVM.average.auc (average AUC from kmer-SVM prediction)
+		+-- allData/ ()
+		+-- time1/ ()
 			+
-			+-- IMM.average.auc (average AUC from IMM prediction)
-			+-- IMM_SVM.average.auc (average AUC from IMMBoost-SVM prediction)
-			+-- IMM_RF.average.auc (average AUC from IMMBoost-RF prediction)
-			+-- ensembleModel.average.auc (average AUC from IMMBoost-Ensemble prediction)
-			+-- kmerSVM.average.auc (average AUC from kmer-SVM prediction)
-			+-- allData/ ()
-			+-- time1/ ()
-				+
-				+-- fold1/ ()
-				...
-				+-- fold5/
+			+-- fold1/ ()
 			...
-			+-- time10/
-	+-- CRMset2/
+			+-- fold5/
 		...
-	+-- CRMsetk/
+		+-- time10/
+	+-- CRMset2/
+	...
 	+-- summaryAUC_msIMMBaseline.txt
 	+-- summaryAUC_IMM_RF.txt
 	+-- summaryAUC_IMM_SVM.txt
