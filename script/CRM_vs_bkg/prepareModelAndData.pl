@@ -20,10 +20,11 @@ use POSIX;
 
 # die "Usage:\n\tperl $0 CRMdir Outdir\n" unless @ARGV==2;
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
 my $crmDir = $ARGV[0]; # CRMdir
 my $outdir = $ARGV[1];
+my $times = $ARGV[2];
 
 # relative paths to IMM
 my $train = "$Bin/../../src/imm/bin/imm_build";
@@ -38,16 +39,14 @@ my $msCRM = "$crmDir/fasta/msCRM.fasta"; # msCRM seq
 my $msNeg = $negFa;
 my $crm = (split /\//,$crmDir)[-1];
 
+`mkdir -p $outdir/$crm`;
 # global variables
 my (%crmSeq, @crmSeqID, %negSeq, @negSeqID, 
     $crmNum, $negNum, @crmSeqIDrand, @negSeqIDrand);
 
-`mkdir $outdir/$crm` unless (-d "$outdir/$crm");
-
-
-##========= 
-# store CRM seq 
-##=========
+##==============
+# read in CRMs seq
+##==============
 my %crmGeneralID = ();  ## msCRM general ID, e.g., bl_blMir7_OE
 my %msCRMSeq = ();      ## msCRM ID
 sub parseCRM {
@@ -72,9 +71,9 @@ sub parseCRM {
         $crmGeneralID{$generalID} = 1; # hash generalID, this will be used to get msCRM seq as training data given CRM id
     }
 }
-##========= 
-# store neg seq 
-##=========
+##=====================
+# read in negative data 
+##=====================
 sub parseNeg 
 {
     my $fa1 = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta');
@@ -92,13 +91,13 @@ sub parseNeg
 ##========
 sub createDir{
     # 10 trials
-    for (my $k=1; $k<=10; $k++)
+    for (my $k=1; $k<=$times; $k++)
     {
-        `mkdir $outdir/$crm/time$k/` unless (-d "$outdir/$crm/time$k/");
+        `mkdir -p $outdir/$crm/time$k/`;
         # 5 fold
         for (my $i = 1; $i<=5; $i++)
         {
-           `mkdir $outdir/$crm/time$k/fold$i` unless (-d "$outdir/$crm/time$k/fold$i");
+           `mkdir -p $outdir/$crm/time$k/fold$i`;
         }
     }
 }
@@ -108,7 +107,7 @@ sub createDir{
 ##==========
 sub sepData {
     # 10 trials
-    for (my $k=1;$k<=10;$k++)
+    for (my $k=1;$k<=$times;$k++)
     {
         my ($first, $second) = shufData(); # get shufl CRM and neg id
         my @crmSeqIDrand = @$first;
@@ -195,14 +194,14 @@ sub sepData {
     }
 }
 
-##====== 
+##==================================================
 # train msIMM for each CRM set, these msIMMs will be 
 # used to score test and training data, after which
 # the pred score will be used as feature to train a 
 # classification model
-##=======
+##==================================================
 sub trainAllData {
-    `mkdir $outdir/$crm/allData` unless (-e "$outdir/$crm/allData");
+    `mkdir -p $outdir/$crm/allData`;
     # use IMM to train both of pos and neg models
     `$train -r -k 6 < $msNeg > $outdir/$crm/allData/neg.model`;
     `$train -r -k 6 < $msCRM > $outdir/$crm/allData/crm.model`;
@@ -211,9 +210,9 @@ sub trainAllData {
     `cp $msNeg $outdir/$crm/allData/msNeg.fa`;
 }
 
-##======= 
+##=========================== 
 # shuffle CRM and neg set id 
-##=======
+##===========================
 sub shufData {
     my @crmSeqIDrand = shuffle @crmSeqID; # shufl CRM id
     my @negSeqIDrand = shuffle @negSeqID; # shufl neg id

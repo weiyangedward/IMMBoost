@@ -1,0 +1,3 @@
+mapping0.dv_neurogenicectoderm	0.6
+mapping1.mesectoderm	0.535
+mapping2.malpig	0.75

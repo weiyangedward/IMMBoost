@@ -15,7 +15,7 @@ use warnings;
 use File::Basename;
 use FindBin qw($Bin);
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
 my $libsvm = "$Bin/libsvmPval.py";
 my $liblinear = "$Bin/libPval.py";
@@ -24,22 +24,17 @@ my $sub = "$Bin/../../src/libsvm-3.21/tools/subset.py";
 
 my $crm = $ARGV[0];
 my $outdir = $ARGV[1];
+my $times = $ARGV[2];
 
 # 10trials
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
 
-    # warn "trial $k\n";
+    warn "time $k ...\n";
     # 5folds
     for (my $i=1;$i<=5;$i++)
     {
-        # my $curDir = "$tmpModelDir/time$k/fold$i";
-        # `mkdir $curDir` unless (-e "$curDir");
         my $homeDir = "$outdir/$crm/time$k/fold$i";
-
-        # copy data from master node to slave node
-        # `cp $homeDir/train.ensembFeat.filGroup2.lib $curDir/train.ensembFeat.filGroup2.lib`;
-        # `cp $homeDir/test.ensembFeat.filGroup2.lib $curDir/test.ensembFeat.filGroup2.lib`;
         
         # create scale range from training data
         `$scale -s $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.filGroup2.lib > $homeDir/train.ensembFeat.lib.scaled`;
@@ -52,7 +47,7 @@ for (my $k=1;$k<=10;$k++)
 
         # store label and pred score
         my @label = ();
-        open TEST,"$homeDir/test.ensembFeat.filGroup2.lib";
+        open TEST,"$homeDir/test.ensembFeat.filGroup2.lib" or die "cannot open $homeDir/test.ensembFeat.filGroup2.lib";
         while (<TEST>)
         {
             chomp(my $line = $_);
@@ -61,7 +56,7 @@ for (my $k=1;$k<=10;$k++)
         }
         close TEST;
         my @predValue = ();
-        open PRED,"$homeDir/test.ensembFeat.lib.scaled.pred.confidentScore";
+        open PRED,"$homeDir/test.ensembFeat.lib.scaled.pred.confidentScore" or die "cannot open $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore";
         while (<PRED>)
         {
             chomp(my $line = $_);
@@ -70,21 +65,20 @@ for (my $k=1;$k<=10;$k++)
         }
         close PRED;
         # output label and pred score to file
-        open OUT1,">$homeDir/test.ensembFeat.lib.scaled.svm.pred.label";
+        open OUT1,">$homeDir/test.ensembFeat.lib.scaled.svm.pred.label" or die "$homeDir/test.ensembFeat.lib.scaled.svm.pred.label";
         for (my $j=0;$j<=$#label;$j++){
             print OUT1 "$label[$j] $predValue[$j]\n";
         }
         close OUT1;
         # compute AUC
         `Rscript $Bin/auc.R $homeDir/test.ensembFeat.lib.scaled.svm.pred.label $homeDir/test.ensembFeat.lib.scaled.svm.pred.label.auc`;
-        # `cp $curDir/* $homeDir/`;
     }
 }
 
 # average over AUC on 10trials x 5folds
 open OUT,">$outdir/$crm/IMM_SVM.average.auc";
 my $sumAUC = 0;
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
     for (my $i=1;$i<=5;$i++)
     {
@@ -99,10 +93,6 @@ for (my $k=1;$k<=10;$k++)
         close AUC;
     }
 }
-my $averageAUC = $sumAUC / 50;
+my $averageAUC = $sumAUC / (5*$times);
 print OUT "$averageAUC\n";
 close OUT;
-# `mv $tmpModelDir/SVM.average.auc $outdir/$crm/SVM.average.auc`;
-
-
-

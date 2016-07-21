@@ -74,7 +74,7 @@ sub pred {
     # loop through all CRMname
     for my $otherCRM (@crmNames)
     {
-        warn "CRM $otherCRM\n";
+        # warn "CRM $otherCRM\n";
         my $crmFa = "$modelDir/$otherCRM/allData/msCRM.fa";
         my $negFa = "$modelDir/$otherCRM/allData/msNeg.fa";
             
@@ -209,11 +209,11 @@ sub pred {
             `rm $homeDir/$id.fa`;
             `rm $homeDir/$otherCRM.crms.model`;
             `rm $homeDir/$otherCRM.neg.model`;
-            # delete everything in tmp directory
-            # `rm -rf $homeDir/*`;
         }
     }
-    ##====== output training seq msIMM features to file ====
+    ##==========================================
+    # Output IMM features for training sequences 
+    #===========================================
     open OUT1,">$homeDir/train.ensembFeat";
     print OUT1 "crm\t";
     for my $crm (sort @crmNames)

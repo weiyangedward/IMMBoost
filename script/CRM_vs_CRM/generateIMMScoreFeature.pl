@@ -83,6 +83,7 @@ sub pred {
         my %output = ();
         for my $otherCRM (@crmNames)
         {             
+            # warn "$otherCRM ...\n";
             my $crmFa = "$modelDir/$otherCRM/allData/msCRM.fasta";
             my $negFa = "$modelDir/$otherCRM/allData/msNeg.fasta";
             ##===============================
@@ -91,8 +92,7 @@ sub pred {
             #================================
             my %crmSeq = ();
             my %crmGeneralID = ();
-            my $fa3 = "";
-            eval{$fa3 = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta')}; die $@ if $@;
+            my $fa3 = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta');
             while (my $curSeq = $fa3->next_seq()){
                 my $id = $curSeq->id();
                 my $seq = $curSeq->seq();
@@ -105,8 +105,7 @@ sub pred {
             #=============================
             my %negSeq = ();
             my %negGeneralID = ();
-            my $fa4 = "";
-            eval{$fa4 = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta')}; die $@ if $@;
+            my $fa4 = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta');
             while (my $curSeq = $fa4->next_seq()){
                 my $id = $curSeq->id();
                 my $seq = $curSeq->seq();
@@ -122,7 +121,8 @@ sub pred {
             for my $id (sort keys %trainSeq)
             {
                 ##==== Create test fasta files  ====
-                eval{open OUT,">$homeDir/$id.fa"}; die $@ if $@;                   
+                # warn "train seq: $id\n";
+                open OUT,">$homeDir/$id.fa";
                 print OUT ">$id\n$trainSeq{$id}\n";
                 close OUT;
                 ##==== read in general seq ID ====
@@ -138,7 +138,7 @@ sub pred {
                 # so that no cheating when using target seq 
                 # to train a model and pred on test data
                 #=========================================
-                eval{open OUT,">$homeDir/$otherCRM.crms.fa"}; die $@ if $@;
+                open OUT,">$homeDir/$otherCRM.crms.fa";
                 for my $crmID (sort keys %crmSeq)
                 {
                     my $generalID = $2 if $crmID =~ /(\w+?)_(\S+)/;
@@ -203,11 +203,12 @@ sub pred {
             for my $id (sort keys %testSeq)
             {
                 ## Create test fasta files  
-                eval{open OUT,">$homeDir/$id.fa"}; die $@ if $@;
+                open OUT,">$homeDir/$id.fa";
+                # warn "test seq: $id\n";
                 print OUT ">$id\n$testSeq{$id}\n";
                 close OUT;
                 ## Create training CRMs for IMM ==
-                eval{open OUT,">$homeDir/$otherCRM.crms.fa"}; die $@ if $@;
+                open OUT,">$homeDir/$otherCRM.crms.fa";
                 for my $crmID (sort keys %crmSeq)
                 {
                     my $generalID = $2 if $crmID =~ /(\w+?)_(\S+)/;
@@ -249,7 +250,7 @@ sub pred {
         ##==========================================
         # Output IMM features for training sequences 
         #===========================================
-        eval{open OUT1,">$homeDir/train.ensembFeat"}; die $@ if $@;
+        open OUT1,">$homeDir/train.ensembFeat";
         print OUT1 "crm\t";
         for my $crm (sort @crmNames){
             print OUT1 "$crm\t";
@@ -271,7 +272,7 @@ sub pred {
         ##======================================
         # output test seq msIMM features to file 
         #=======================================
-        eval{open OUT2,">$homeDir/test.ensembFeat"}; die $@ if $@;
+        open OUT2,">$homeDir/test.ensembFeat";
         print OUT2 "crm\t";
         for my $crm (sort @crmNames){
             print OUT2 "$crm\t";

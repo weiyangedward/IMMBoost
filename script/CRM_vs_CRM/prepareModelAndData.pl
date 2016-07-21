@@ -18,10 +18,11 @@ use List::Util qw(shuffle);
 use Bio::SeqIO;
 use POSIX;
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
 my $crmDir = $ARGV[0];
 my $outdir = $ARGV[1];
+my $times = $ARGV[2];
 
 my $train = "$Bin/../../src/imm/bin/imm_build";
 my $pred = "$Bin/../../src/imm/bin/imm_score";
@@ -32,7 +33,7 @@ my $negFa = "$crmDir/fasta/negCRM.fasta";
 my $msCRM = "$crmDir/fasta/msCRM.fasta";
 my $msNeg = "$crmDir/fasta/negmsCRM.fasta";
 my $crm = (split /\//,$crmDir)[-1];
-`mkdir $outdir/$crm` unless (-d "$outdir/$crm");
+`mkdir -p $outdir/$crm`;
 my (%crmSeq,@crmSeqID,%negSeq,@negSeqID,
     $crmNum,$negNum,@crmSeqIDrand,@negSeqIDrand);
 
@@ -42,8 +43,7 @@ my (%crmSeq,@crmSeqID,%negSeq,@negSeqID,
 my %crmGeneralID = ();  ## msCRM general ID
 my %msCRMSeq = ();      ## msCRM ID
 sub parseCRM {
-    my $fa = "";
-    eval{$fa = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta')}; die $@ if $@;
+    my $fa = Bio::SeqIO->new(-file=>$crmFa,-format=>'Fasta');
     while (my $nextSeq = $fa->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -52,8 +52,7 @@ sub parseCRM {
         $crmNum ++;
     }
 
-    my $fa2 = "";
-    eval{$fa2 = Bio::SeqIO->new(-file=>$msCRM,-format=>'Fasta')}; die $@ if $@;
+    my $fa2 = Bio::SeqIO->new(-file=>$msCRM,-format=>'Fasta');
     while (my $curSeq = $fa2->next_seq()){
         my $id = $curSeq->id();
         my $seq = $curSeq->seq();
@@ -68,8 +67,7 @@ sub parseCRM {
 my %negGeneralID = ();
 my %msNegSeq = ();
 sub parseNeg {
-    my $fa = "";
-    eval{$fa = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta')}; die $@ if $@;
+    my $fa = Bio::SeqIO->new(-file=>$negFa,-format=>'Fasta');
     while (my $nextSeq = $fa->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -78,8 +76,7 @@ sub parseNeg {
         $negNum ++;
     }
 
-    my $fa1 = "";
-    eval{$fa1 = Bio::SeqIO->new(-file=>$msNeg,-format=>'Fasta')}; die $@ if $@;
+    my $fa1 = Bio::SeqIO->new(-file=>$msNeg,-format=>'Fasta');
     while (my $nextSeq = $fa1->next_seq()){
         my $id = $nextSeq->id();
         my $seq = $nextSeq->seq();
@@ -92,7 +89,7 @@ sub parseNeg {
 # Create directories 
 ##==================
 sub createDir{
-    for (my $k=1; $k<=10; $k++)
+    for (my $k=1; $k<=$times; $k++)
     {
         `mkdir -p $outdir/$crm/time$k/`;
         for (my $i = 1; $i<=5; $i++)
@@ -107,7 +104,7 @@ sub createDir{
 ##===============================================
 sub sepData {
     
-    for (my $k=1;$k<=10;$k++)
+    for (my $k=1;$k<=$times;$k++)
     {
         my ($first, $second) = shufData();
         my @crmSeqIDrand = @$first;
@@ -122,10 +119,10 @@ sub sepData {
             $crmEnd = floor(($i/5) * $crmNum) - 1;
             $negEnd = floor(($i/5) * $negNum) - 1;
 
-            eval{open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta"}; die $@ if $@;
-            eval{open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta"}; die $@ if $@;
-            eval{open OUT3,">$outdir/$crm/time$k/fold$i/test.label"}; die $@ if $@;
-            eval{open OUT4,">$outdir/$crm/time$k/fold$i/train.label"}; die $@ if $@;
+            open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta";
+            open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta";
+            open OUT3,">$outdir/$crm/time$k/fold$i/test.label";
+            open OUT4,">$outdir/$crm/time$k/fold$i/train.label";
 
             my %trainCRM = ();
             for (my $j=0; $j<=$crmNum-1;$j++){
@@ -155,8 +152,8 @@ sub sepData {
             }
             close OUT2;
 
-            eval{open OUT1,">$outdir/$crm/time$k/fold$i/test.neg.fasta"}; die $@ if $@;
-            eval{open OUT2,">$outdir/$crm/time$k/fold$i/train.neg.fasta"}; die $@ if $@;
+            open OUT1,">$outdir/$crm/time$k/fold$i/test.neg.fasta";
+            open OUT2,">$outdir/$crm/time$k/fold$i/train.neg.fasta";
 
             my %trainNeg = ();
             for (my $j=0;$j<=$negNum-1;$j++)

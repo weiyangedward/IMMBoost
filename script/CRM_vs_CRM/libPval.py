@@ -8,10 +8,17 @@ library is needed.
 
 """
 
-import sys
-sys.path.append('../../src/liblinear-2.1/python')
+from __future__ import print_function
+import sys, os
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+    
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '../src/liblinear-2.1/python'))
 from liblinearutil import *
-sys.path.append('../../src/libsvm-3.21/tools')
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '../src/libsvm-3.21/tools'))
 from grid import *
 
 # get training and test data
@@ -19,7 +26,7 @@ yTrain, xTrain = svm_read_problem(sys.argv[1])
 yTest, xTest = svm_read_problem(sys.argv[2])
 
 # grid search for best parameter on subset of training data
-rate, grid = find_parameters(sys.argv[5], '-s 0 -t 0 -v 5')
+rate, grid = find_parameters(sys.argv[5], '-s 0 -t 0 -v 5 -out null')
 
 # train svm
 prob = problem(yTrain, xTrain)

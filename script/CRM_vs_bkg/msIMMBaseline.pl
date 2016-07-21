@@ -16,7 +16,6 @@
 
 use strict;
 use warnings;
-# use lib '/shared-mounts/sinhas/lib/';
 use FindBin qw($Bin);
 use Bio::SeqIO;
 use File::Basename;
@@ -24,18 +23,13 @@ use File::Basename;
 my $train = "$Bin/../../src/imm/bin/imm_build";
 my $pred = "$Bin/../../src/imm/bin/imm_score";
 
-# die "Usage:\n\tperl $0 CRMname outdir\n" unless @ARGV==2;
 
-die `pod2text $0` if (@ARGV!=2);
-
-# create dir at slave nodes
-# my $tmpDir = $ENV{TMPDIR};
-# my $tmpModelDir = "$tmpDir/output";
-# `mkdir $tmpModelDir` unless (-e "$tmpModelDir");
+die `pod2text $0` if (@ARGV!=3);
 
 
 my $crmName = $ARGV[0]; # CRMname
 my $outdir = $ARGV[1]; # outdir
+my $times = $ARGV[2];
 
 my $crmDir = "$outdir/$crmName";
 
@@ -45,27 +39,21 @@ my $crmDir = "$outdir/$crmName";
 # then score test seq, and a AUC is computed
 ## ===========
 # 10 trials 
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
     # `mkdir $tmpModelDir/time$k` unless (-e "$tmpModelDir/time$k");
-    warn "trial $k\n";
+    warn "time $k ...\n";
     # 5 fold
     for (my $i=1;$i<=5;$i++)
     {
         # my $curDir = "$tmpModelDir/time$k/fold$i";
         # `mkdir $curDir` unless (-e "$curDir");
         my $homeDir = "$crmDir/time$k/fold$i";
-        
-        # copy data from master node to slave nodes
-        # `cp $homeDir/test.label $curDir/test.label`; # test data label
-        # `cp $homeDir/train.neg.fasta $curDir/train.neg.fasta`; # neg training data
-        # `cp $homeDir/train.crm.fasta $curDir/train.crm.fasta`; # pos training data
-        # `cp $homeDir/test.crm.and.neg.fasta $curDir/test.crm.and.neg.fasta`; # test data
 
         #===== hash test data label =====
         my %testID = ();
         my $testLabel = "$homeDir/test.label";
-        open IN,$testLabel;
+        open IN,$testLabel or die "cannot open $testLabel";
         while (my $line = <IN>)
         {
             chomp $line;
@@ -79,7 +67,7 @@ for (my $k=1;$k<=10;$k++)
         `$pred -f -n $homeDir/train.msNeg.model $homeDir/train.msCRM.model $homeDir/test.crm.and.neg.fasta > $homeDir/test.crm.and.neg.IMM.pred`;
         #====== output file with CRM id, score, label
         open OUT,">$homeDir/test.crm.and.neg.IMM.pred.lab";
-        open PRED,"$homeDir/test.crm.and.neg.IMM.pred";
+        open PRED,"$homeDir/test.crm.and.neg.IMM.pred" or die "cannot open $homeDir/test.crm.and.neg.IMM.pred";
         while (<PRED>)
         {
             chomp(my $line = $_);
@@ -90,9 +78,6 @@ for (my $k=1;$k<=10;$k++)
         close OUT;
         # compute AUC given the pred score
         `Rscript $Bin/IMMauc.R $homeDir/test.crm.and.neg.IMM.pred.lab $homeDir/test.crm.and.neg.IMM.pred.lab.auc`;
-        # # copy AUC and pred files back to master node
-        # `cp $homeDir/test.crm.and.neg.IMM.pred.lab.auc $homeDir/test.crm.and.neg.IMM.pred.lab.auc`;
-        # `cp $homeDir/test.crm.and.neg.IMM.pred.lab $homeDir/test.crm.and.neg.IMM.pred.lab`;
     }
 }
 ##===== 
@@ -102,14 +87,14 @@ for (my $k=1;$k<=10;$k++)
 ##=======
 my $sumAUC = 0;
 # 10 trials
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
     # 5 fold
     for (my $i=1;$i<=5;$i++)
     {
         # my $homeDir = "$tmpModelDir/time$k/fold$i";
         my $homeDir = "$crmDir/time$k/fold$i";
-        open AUC,"$homeDir/test.crm.and.neg.IMM.pred.lab.auc";
+        open AUC,"$homeDir/test.crm.and.neg.IMM.pred.lab.auc" or die "cannot open $homeDir/test.crm.and.neg.IMM.pred.lab.auc";
         while (<AUC>)
         {
             chomp(my $second = <AUC>);
@@ -119,10 +104,9 @@ for (my $k=1;$k<=10;$k++)
         close AUC;
     }
 }
-my $aveAUC = $sumAUC / 50;  ## a total of 10x5 AUCs
+my $aveAUC = $sumAUC / (5*$times);  ## a total of 10x5 AUCs
 # output average AUC to file
 open OUT,">$crmDir/IMM.average.auc";
 print OUT "$aveAUC\n";
 close OUT;
-# `cp $tmpModelDir/IMM.average.auc $crmDir/IMM.average.auc`;
 

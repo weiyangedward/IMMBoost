@@ -1,3 +1,3 @@
-CRMsets/mapping0.ap
-CRMsets/mapping0.dv
-CRMsets/mapping0.dv_earlymesoderm
+CRMsets/mapping0.dv_neurogenicectoderm
+CRMsets/mapping1.mesectoderm
+CRMsets/mapping2.malpig

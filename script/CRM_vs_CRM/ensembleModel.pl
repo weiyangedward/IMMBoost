@@ -18,39 +18,27 @@ use FindBin qw($Bin);
 
 # die "Usage: perl $0 mapping outdir\n" unless @ARGV==2;
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
 my $crm = $ARGV[0];
 my $outdir = $ARGV[1];
+my $times = $ARGV[2];
 
-# create work dir at slave node
-# my $tmpDir = $ENV{TMPDIR};
-# my $tmpModelDir = "$tmpDir/testAUC";
-# `mkdir $tmpModelDir` unless (-e "$tmpModelDir");
 
 # 10trials
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
-    warn "trial $k\n";
+    warn "time $k...\n";
     # 5folds
     for (my $i=1;$i<=5;$i++)
     {
         my $homeDir = "$outdir/$crm/time$k/fold$i";
-        # `mkdir $homeDir/testAUC` unless (-e "$homeDir/testAUC");
 
         ##===== use equal weight for predictions from each model =====
         my $immTrainAUC = 1;
         # my $kmerSVMTrainAUC = 1;
         my $rfTrainAUC = 1;
         my $svmTrainAUC = 1;
-
-        # copy data from master node to slave node
-        # `cp $outdir/$crm/time$k/fold$i/test.crm.and.neg.IMM.pred.lab $tmpModelDir/IMM.test.pred`;
-        # `cp $outdir/$crm/time$k/fold$i/test.crm.fasta.andNeg.rc.6mer.pred.lab $tmpModelDir/kmerSVM.test.pred`;
-        # `cp $outdir/$crm/time$k/fold$i/test.ensembFeat.pred $tmpModelDir/RF.test.pred`;
-        # `cp $outdir/$crm/time$k/fold$i/test.label $tmpModelDir/test.label`;
-        # `cp $outdir/$crm/time$k/fold$i/test.ensembFeat.filGroup2 $tmpModelDir/test.ensembFeat.filGroup2`;
-        # `cp $outdir/$crm/time$k/fold$i/test.ensembFeat.lib.scaled.svm.pred.label $tmpModelDir/SVM.test.pred`;
 
         ##=== read the order of RF's test data ===
         my %id2pos = ();
@@ -130,30 +118,18 @@ for (my $k=1;$k<=10;$k++)
         }
         close OUT;
         `Rscript $Bin/auc.R $homeDir/blend.test.pred $homeDir/blend.test.pred.auc`;
-        # copy output to master node
-        # if (-e "$homeDir/testAUC"){
-        #     `rm -rf $homeDir/testAUC/*`;
-        #     `mv $homeDir/* $homeDir/testAUC`;
-        # }
-        # else{
-        #     `mv $homeDir/* $homeDir/testAUC`;
-        # }
     }
 }
 
 # average AUC over 10trirals x 5folds and output to file
 open OUT,">$outdir/$crm/ensembleModel.average.auc";
 my $sumAUC = 0;
-for (my $k=1;$k<=10;$k++)
+for (my $k=1;$k<=$times;$k++)
 {
-    # `mkdir $tmpModelDir/time$k` unless (-e "$tmpModelDir/time$k");
 
     for (my $i=1;$i<=5;$i++)
     {
         my $homeDir ="$outdir/$crm/time$k/fold$i";
-        # my $curDir = "$tmpModelDir/time$k/fold$i";
-        # `mkdir $curDir` unless (-e "$curDir");
-        # `cp $homeDir/blend.test.pred.auc $curDir`;
         open AUC,"$homeDir/blend.test.pred.auc" or die "cannot open $homeDir/blend.test.pred.auc\n";
         while (<AUC>)
         {
@@ -164,21 +140,10 @@ for (my $k=1;$k<=10;$k++)
         close AUC;
     }
 }
-my $averageAUC = $sumAUC / 50;
+my $averageAUC = $sumAUC / (5 * $times);
 print OUT "$averageAUC\n";
 close OUT;
-# `mv $tmpModelDir/blend.test.addmsSVM.excludeKmerSVM.equalWeight.average.auc $outdir/$crm/`;
 
-# sub readAUC {
-#     my $file  = shift;
-#     open IN,$file;
-#     my $auc = 0;
-#     while (my $line = <IN>){
-#         chomp($line);
-#         $auc = $line;
-#     }
-#     return $auc;
-# }
 
 sub norm {
     my $array = shift;

@@ -15,22 +15,20 @@ use warnings;
 use File::Basename;
 use FindBin qw($Bin);
 
-# if (@ARGV!=2){
-#     die "Usage: perl $0 CRMname outdir\n";
-# }
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
 
 my $crm = $ARGV[0]; # CRMname
 my $outdir = $ARGV[1]; # outdir
+my $times = $ARGV[2];
 
 
 sub pred {
     # 10trials
-    for (my $k=1;$k<=10;$k++) 
+    for (my $k=1;$k<=$times;$k++) 
     {
-        warn "trial $k\n";
+        warn "time $k...\n";
         # 5folds
         for (my $i=1;$i<=5;$i++) 
         {    
@@ -52,7 +50,7 @@ sub pred {
     open OUT,">$outdir/$crm/IMM_RF.average.auc";
     my $sumAUC = 0;
     # 10trials
-    for (my $k=1;$k<=10;$k++)
+    for (my $k=1;$k<=$times;$k++)
     {
         # 5folds
         for (my $i=1;$i<=5;$i++)
@@ -68,7 +66,7 @@ sub pred {
             close AUC;
         }
     }
-    my $averageAUC = $sumAUC / 50; # average over 10 trials x 5-folds
+    my $averageAUC = $sumAUC / (5*$times); # average over 10 trials x 5-folds
     print OUT "$averageAUC\n";
     close OUT;
     # `mv $tmpModelDir/RF.average.auc $outdir/$crm/RF.average.auc`; 

@@ -15,38 +15,25 @@ use warnings;
 use File::Basename;
 use FindBin qw($Bin);
 
-# if (@ARGV!=2){
-#     die "Usage: perl $0 CRMname outdir\n";
-# }
 
-die `pod2text $0` if (@ARGV!=2);
+die `pod2text $0` if (@ARGV!=3);
 
-# create an output dir in slave node
-# my $tmpDir = $ENV{TMPDIR};
-# my $tmpModelDir = "$tmpDir/output";
-# `mkdir $tmpModelDir` unless (-e "$tmpModelDir");
 
 my $crm = $ARGV[0]; # CRMname
 my $outdir = $ARGV[1]; # outdir
+my $times = $ARGV[2];
 
 
 sub pred {
     # 10trials
-    for (my $k=1;$k<=10;$k++) 
+    for (my $k=1;$k<=$times;$k++) 
     {
-        # warn "trial $k\n";
-        # `mkdir $tmpModelDir/time$k` unless (-e "$tmpModelDir/time$k");
+        warn "time $k\n";
+
         # 5folds
         for (my $i=1;$i<=5;$i++) 
         {    
-            # my $curDir = "$tmpModelDir/time$k/fold$i";
-            # `mkdir $curDir` unless (-e "$curDir");
             my $homeDir = "$outdir/$crm/time$k/fold$i";
-            # copy data from master node to slave node
-            # `cp $homeDir/train.ensembFeat.filGroup2.lib $curDir/train.ensembFeat.filGroup2.lib`;
-            # `cp $homeDir/test.ensembFeat.filGroup2.lib $curDir/test.ensembFeat.filGroup2.lib`;
-            # `cp $homeDir/train.ensembFeat.filGroup2 $curDir/train.ensembFeat.filGroup2`;
-            # `cp $homeDir/test.ensembFeat.filGroup2 $curDir/test.ensembFeat.filGroup2`;
 
             # generate label files
             `awk \'{print \$1}\' $homeDir/train.ensembFeat.filGroup2.lib > $homeDir/train.ensembFeat.lib.lab`;
@@ -55,9 +42,6 @@ sub pred {
             `Rscript $Bin/randomForest.R $homeDir/train.ensembFeat.filGroup2 $homeDir/train.ensembFeat.lib.lab $homeDir/test.ensembFeat.filGroup2 $homeDir/test.ensembFeat.lib.lab $homeDir/test.ensembFeat.pred $homeDir/train.ensembFeat.modelImportance`;
             # compute AUC scores
             `Rscript $Bin/auc.R $homeDir/test.ensembFeat.pred $homeDir/test.ensembFeat.pred.auc`;
-            # `cp $homeDir/test.ensembFeat.pred.auc $homeDir/test.ensembFeat.pred.auc`;
-            # `mv $homeDir/test.ensembFeat.pred $homeDir/test.ensembFeat.pred`;
-            # `mv $homeDir/train.ensembFeat.modelImportance $homeDir/train.ensembFeat.modelImportance`;
         }
     }
 
@@ -65,7 +49,7 @@ sub pred {
     open OUT,">$outdir/$crm/IMM_RF.average.auc";
     my $sumAUC = 0;
     # 10trials
-    for (my $k=1;$k<=10;$k++)
+    for (my $k=1;$k<=$times;$k++)
     {
         # 5folds
         for (my $i=1;$i<=5;$i++)
@@ -81,10 +65,9 @@ sub pred {
             close AUC;
         }
     }
-    my $averageAUC = $sumAUC / 50; # average over 10 trials x 5-folds
+    my $averageAUC = $sumAUC / (5*$times); # average over 10 trials x 5-folds
     print OUT "$averageAUC\n";
-    close OUT;
-    # `mv $tmpModelDir/RF.average.auc $outdir/$crm/RF.average.auc`; 
+    close OUT; 
 }
 
 # call pred() function

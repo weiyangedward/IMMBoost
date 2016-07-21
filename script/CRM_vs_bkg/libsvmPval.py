@@ -8,10 +8,21 @@ test data.
 
 """
 
-import sys
-sys.path.append("../../src/libsvm-3.21/python")
+from __future__ import print_function
+import sys, os
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+# eprint("1..............\n")
+# eprint(os.path.realpath(__file__))
+# eprint(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '../src/libsvm-3.21/python'))
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '../src/libsvm-3.21/python'))
 from svmutil import *
-sys.path.append("../../src/libsvm-3.21/tools")
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), '../src/libsvm-3.21/tools'))
 from grid import *
 
 # import train and test data
@@ -19,7 +30,7 @@ yTrain, xTrain = svm_read_problem(sys.argv[1])
 yTest, xTest = svm_read_problem(sys.argv[2])
 
 # grid search for best parameter on a subset of training data
-rate, grid = find_parameters(sys.argv[5], '-s 0 -t 2 -v 5')
+rate, grid = find_parameters(sys.argv[5], '-s 0 -t 2 -v 5 -out null')
 
 # train linear SVM
 prob = svm_problem(yTrain, xTrain)

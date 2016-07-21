@@ -15,11 +15,13 @@ use File::Basename;
 use Bio::SeqIO;
 
 # die "Usage: perl $0 CRMDir OutDir CRMGroupTable\n" unless @ARGV==3;
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 my $CRMDir = $ARGV[0];
 my $outdir = $ARGV[1];
 my $CRMGroup = $ARGV[2];
+my $times = $ARGV[3];
+
 
 my %CRMsets = ();
 my %crm2seqID = ();
@@ -42,7 +44,7 @@ while (<$CRMDir/*>)
 
 
 my %crm2group = ();
-open IN,$CRMGroup;
+open IN,$CRMGroup or die "cannot open $CRMGroup";
 while (<IN>){
     chomp(my $line = $_);
     my @group = split /\s+/,$line;
@@ -69,7 +71,7 @@ for my $crmName (keys %CRMsets)
     # chomp(my $crm = $_);
     # my $crmName = basename($crm);
     warn "$crmName\n";
-    for (my $k=1;$k<=10;$k++)
+    for (my $k=1;$k<=$times;$k++)
     {
         # warn "trial $k\n";
         for (my $i=1;$i<=5;$i++)
@@ -78,7 +80,7 @@ for my $crmName (keys %CRMsets)
             # warn "$labelFileTrain\n";
             my $labelFileTest = "$outdir/$crmName/time$k/fold$i/test.label";
 
-            open LAB,$labelFileTrain;
+            open LAB,$labelFileTrain or die "cannot open $labelFileTrain";
             my %seq2labTrain = ();
             while (<LAB>)
             {
@@ -88,7 +90,7 @@ for my $crmName (keys %CRMsets)
             }
             close LAB;
 
-            open LAB,$labelFileTest;
+            open LAB,$labelFileTest or die "cannot open $labelFileTest";
             my %seq2labTest = ();
             while (<LAB>)
             {
@@ -99,7 +101,7 @@ for my $crmName (keys %CRMsets)
             close LAB;
             ##====== Create lib file for training data ========##
             my $trainFile = "$outdir/$crmName/time$k/fold$i/train.ensembFeat";
-            open IN,$trainFile;
+            open IN,$trainFile or die "cannot open $trainFile";
             open OUT1,">$outdir/$crmName/time$k/fold$i/train.ensembFeat.filGroup2";
             open OUT2,">$outdir/$crmName/time$k/fold$i/train.ensembFeat.filGroup2.lib";
 
@@ -139,7 +141,7 @@ for my $crmName (keys %CRMsets)
             close IN;
             ##====== create lib format for test data =========##
             my $testFile = "$outdir/$crmName/time$k/fold$i/test.ensembFeat";
-            open IN,$testFile;
+            open IN,$testFile or die "cannot open $testFile";
             open OUT1,">$outdir/$crmName/time$k/fold$i/test.ensembFeat.filGroup2";
             open OUT2,">$outdir/$crmName/time$k/fold$i/test.ensembFeat.filGroup2.lib";
             while (<IN>){
