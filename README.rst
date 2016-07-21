@@ -97,7 +97,7 @@ QuickStart
 		+-- ensembleModel.average.auc (average AUC from IMMBoost-Ensemble prediction)
 		+-- kmerSVM.average.auc (average AUC from kmer-SVM prediction)
 		+-- allData/ (CRM and negative seq fasta files and 
-					the trained IMM models using this data)
+			the trained IMM models using this data)
 		+-- time1/ (1st 5-fold cross validation)
 			+
 			+-- fold1/ ()
