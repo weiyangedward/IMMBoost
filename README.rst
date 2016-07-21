@@ -141,9 +141,9 @@ QuickStart
 		2) randomGenomicSeq.fasta : Random genomic seq.
 
 		3) msCRM.fasta : msCRM seq file (if you don't have 
-		msCRM seq file, you can copy CRM.fasta over and 
-		change the seqID to a corresponding species_seqID, 
-		e.g., Dmel_seqID).
+			msCRM seq file, you can copy CRM.fasta over and 
+			change the seqID to a corresponding species_seqID, 
+			e.g., Dmel_seqID).
 
 		4) negCRM.fasta : Negative CRM seq for CRM vs CRM task.
 
