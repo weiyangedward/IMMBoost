@@ -85,7 +85,7 @@ QuickStart
 	>> sh run_crm_vs_bkg.sh
 	
 	Descriptions of directory and files are shown within 
-	parentheses:
+	parentheses (Example has 10 runs of 5-fold cross validations.):
 	
 	1) CRM_vs_CRM/
 	+
@@ -100,18 +100,18 @@ QuickStart
 			the trained IMM models using this data)
 		+-- time1/ (1st 5-fold cross validation)
 			+
-			+-- fold1/ ()
+			+-- fold1/ (results of 1st fold)
 			...
 			+-- fold5/
 		...
 		+-- time10/
 	+-- CRMset2/
 	...
-	+-- summaryAUC_msIMMBaseline.txt
-	+-- summaryAUC_IMM_RF.txt
-	+-- summaryAUC_IMM_SVM.txt
-	+-- summaryAUC_ensembleModel.txt
-	+-- summaryAUC_kmerSVM.txt
+	+-- summaryAUC_msIMMBaseline.txt (AUCs from IMM)
+	+-- summaryAUC_IMM_RF.txt (AUCs from IMMBoost-RF)
+	+-- summaryAUC_IMM_SVM.txt (AUCs from IMMBoost-SVM)
+	+-- summaryAUC_ensembleModel.txt (AUCs from IMMBoost-Ensemble)
+	+-- summaryAUC_kmerSVM.txt (AUCs from kmer-SVM)
 
 	2) CRM_vs_bkg/ (same file structure as above)
 
