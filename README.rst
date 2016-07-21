@@ -132,25 +132,31 @@ QuickStart
 	
 	Input files including:
 
-	1. "CRMsetsList.txt" : a list of path to CRMsets. Each 
+	1. CRMsetsList.txt : a list of path to CRMsets. Each 
 	CRMset folder should have a sub-folder called "fasta", 
-	inside which there are: 
-		1) CRM seq file "CRM.fasta"; 
-		2) random genomic seq "randomGenomicSeq.fasta"; 
-		3) msCRM seq file "msCRM.fasta" (if you don't have 
+	inside which there are files: 
+
+		1) CRM.fasta : CRM seq file. Each seq has a unique name.
+
+		2) randomGenomicSeq.fasta : Random genomic seq.
+
+		3) msCRM.fasta : msCRM seq file (if you don't have 
 		msCRM seq file, you can copy CRM.fasta over and 
-		change the seqID to species_seqID, e.g., Dmel_seqID); 
-		4) negative CRM seq for CRM vs CRM task "negCRM.fasta"
-		5) negative msCRM seq for CRM vs CRM task "negmsCRM.fasta"
+		change the seqID to a corresponding species_seqID, 
+		e.g., Dmel_seqID).
 
-	2. "sampleOutput/CRM_vs_CRM/" : a directory for output files.
+		4) negCRM.fasta : Negative CRM seq for CRM vs CRM task.
 
-	3. "sampleData/CRMsets/" : a directory for data input. 
-	Each sub directory should be a CRMset.
+		5) negmsCRM.fasta : Negative msCRM seq for CRM vs CRM task.
 
-	4. "CRMGroup.txt" : a list of grouping of CRMsets, where 
-	each row is a group. How to define a "group" would be 
-	subjective to users or biological grouptruth in our case.
+	2. sampleOutput/CRM_vs_CRM/ : a directory of output files.
+
+	3. sampleData/CRMsets/ : a directory of input data. 
+		Each sub directory contains a CRMset files.
+
+	4. CRMGroup.txt : a list of grouping of CRMsets, where 
+		each row is a group. How to define a "group" would be 
+		subjective to users or biological grouptruth in our case.
 
 
 3. To Run
