@@ -7,7 +7,7 @@
 
 =head1 Usage
 
-  perl prepareModelAndData.pl CRMdir Outdir
+  perl prepareModelAndData.pl CRMdir Outdir k-Times n-Folds
 
 =cut
 
@@ -18,11 +18,12 @@ use List::Util qw(shuffle);
 use Bio::SeqIO;
 use POSIX;
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 my $crmDir = $ARGV[0];
 my $outdir = $ARGV[1];
 my $times = $ARGV[2];
+my $nfolds = $ARGV[3];
 
 my $train = "$Bin/../../src/imm/bin/imm_build";
 my $pred = "$Bin/../../src/imm/bin/imm_score";
@@ -92,14 +93,14 @@ sub createDir{
     for (my $k=1; $k<=$times; $k++)
     {
         `mkdir -p $outdir/$crm/time$k/`;
-        for (my $i = 1; $i<=5; $i++)
+        for (my $i = 1; $i<=$nfolds; $i++)
         {
             `mkdir -p $outdir/$crm/time$k/fold$i`;
         }
     }
 }
 ##===============================================
-# Create 10 trials x 5-fold cross validation sets
+# Create k trials x n-fold cross validation sets
 # by randomly partition the CRM and neg sets
 ##===============================================
 sub sepData {
@@ -114,10 +115,10 @@ sub sepData {
         my $negStart = 0;
         my $negEnd = 0;
 
-        for (my $i = 1; $i <= 5; $i ++)
+        for (my $i = 1; $i <= $nfolds; $i ++)
         {
-            $crmEnd = floor(($i/5) * $crmNum) - 1;
-            $negEnd = floor(($i/5) * $negNum) - 1;
+            $crmEnd = floor(($i/$nfolds) * $crmNum) - 1;
+            $negEnd = floor(($i/$nfolds) * $negNum) - 1;
 
             open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta";
             open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta";

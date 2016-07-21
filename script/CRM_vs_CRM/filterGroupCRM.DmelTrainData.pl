@@ -3,12 +3,13 @@ use warnings;
 use File::Basename;
 use Bio::SeqIO;
 
-die "Usage: perl $0 CRMDir OutDir CRMGroupTable\n" unless @ARGV==4;
+die "Usage: perl $0 CRMDir OutDir CRMGroupTable\n" unless @ARGV==5;
 
 my $CRMDir = $ARGV[0];
 my $outdir = $ARGV[1];
 my $CRMGroup = $ARGV[2];
 my $times = $ARGV[3];
+my $nfolds = $ARGV[4];
 
 my %CRMsets = ();
 my %crm2seqID = ();
@@ -59,7 +60,7 @@ for my $crmName (keys %CRMsets)
     for (my $k=1;$k<=$times;$k++)
     {
         warn "time $k ...\n";
-        for (my $i=1;$i<=5;$i++)
+        for (my $i=1;$i<=$nfolds;$i++)
         {
             my $labelFileTrain = "$outdir/$crmName/time$k/fold$i/train.label";
             my $labelFileTest = "$outdir/$crmName/time$k/fold$i/test.label";

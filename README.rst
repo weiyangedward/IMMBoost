@@ -159,22 +159,22 @@ QuickStart
 
 	perl IMMBoost.pl [options] CRMList Outdir Datadir crmGroupTable
 
-      --task <str>      What task to perform? default=crm_vs_crm. There are two modes:
-                              1) "--task crm_vs_bkg": classify CRM from background
-                                      genomic seq;
-                              2) "--task crm_vs_crm": classify CRM from other CRM seq
-
-      --step <str>      What steps to run? default=12345678.
-                            1. prepare data
-                            2. IMM score feature
-                            3. IMM prediction
-                            4. IMM-SVM prediction
-                            5. IMM-RF prediction
-                            6. generate kmer-SVM feature
-                            7. kmer-SVM prediction
-                            8. IMM-Ensemble
-      --kfold <int>         To perform k-fold cross validation. default=5.
-      --times <int>     To repeat k-fold cross validation for how many times? default=2.
+     --task <str>      What task to perform? default=crm_vs_crm. There are two modes:
+                          1) "--task crm_vs_bkg": classify CRM from background 
+                                  genomic seq; 
+                          2) "--task crm_vs_crm": classify CRM from other CRM seq
+  
+  	--step <str>      What steps to run? default=12345678.
+                        1. prepare data
+                        2. IMM score feature
+                        3. IMM prediction
+                        4. IMM-SVM prediction
+                        5. IMM-RF prediction 
+                        6. generate kmer-SVM feature
+                        7. kmer-SVM prediction
+                        8. IMM-Ensemble
+  	--nfolds <int>    To perform n-fold cross validation. default=5.
+  	--ktimes <int>    To repeat n-fold cross validation for k times. default=2.
 
 
 Additional Information

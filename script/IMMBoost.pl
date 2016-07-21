@@ -20,8 +20,8 @@
                         6. generate kmer-SVM feature
                         7. kmer-SVM prediction
                         8. IMM-Ensemble
-  --kfold <int>         To perform k-fold cross validation. default=5.
-  --times <int>     To repeat k-fold cross validation for how many times? default=2.
+  --nfolds <int>    To perform n-fold cross validation. default=5.
+  --ktimes <int>    To repeat n-fold cross validation for k times. default=2.
 
 =head1 Example:
 
@@ -34,18 +34,18 @@ use warnings;
 use FindBin qw($Bin);
 use Getopt::Long;
 
-my ($task, $step, $times, $kfold);
+my ($task, $step, $ktimes, $nfolds);
 
 $task = "crm_vs_crm";
-$kfold = 5;
-$times = 2;
+$nfolds = 5;
+$ktimes = 2;
 $step = "12345678";
 
 GetOptions(
   "task:s"=>\$task,
   "step:s"=>\$step,
-  "kfold:i"=>\$kfold,
-  "times:i"=>\$times
+  "nfolds:i"=>\$nfolds,
+  "ktimes:i"=>\$ktimes
 );
 
 die `pod2text $0` if (@ARGV<4);
@@ -74,12 +74,14 @@ else{
     die("Bio::SeqIO cannot be imported. Please check to see if the modules have already been installed.\n");
 }
 
-#=================
+#================================================================================
+#
 # Task: CRM_vs_CRM 
-#=================
+#
+#================================================================================
 sub CRM_vs_CRM {
   my @crmNames = ();
-  open IN,$crmLst;
+  open IN,$crmLst or die "cannot open $crmLst";
   while (<IN>)
   {
     chomp(my $indir = $_);
@@ -97,14 +99,14 @@ sub CRM_vs_CRM {
     #============================================
     warn "Step1 ----------------------------------\n";
     warn "prepare Model And Data ...\n";
-    open IN,$crmLst;
+    open IN,$crmLst or die "cannot open $crmLst";
     while (<IN>)
     {
       chomp(my $indir = $_);
       my $crm = (split /\//,$indir)[-1];
       `mkdir -p $outdir/$crm`;
       warn "train IMM model on $crm\n";
-      `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir $ktimes $nfolds`;
     }
     close IN;
     warn "Step1 is done!\n";
@@ -121,9 +123,9 @@ sub CRM_vs_CRM {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      for (my $k=1;$k<=$times;$k++)
+      for (my $k=1;$k<=$ktimes;$k++)
       {
-        for (my $i=1;$i<=5;$i++)
+        for (my $i=1;$i<=$nfolds;$i++)
         {
           warn "time$k fold$i\n";
           `perl $Bin/CRM_vs_CRM/generateIMMScoreFeature.pl $crm $outdir $k $i`;
@@ -131,10 +133,10 @@ sub CRM_vs_CRM {
       }
     }
     warn "filter msCRMs in the same group...\n";
-    `perl $Bin/CRM_vs_CRM/filterGroupCRM.pl $datadir $outdir $crmGroupTable $times`;
+    `perl $Bin/CRM_vs_CRM/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
 
     warn "filter Dmel CRMs in the same group...\n";
-    `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable $times`;
+    `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
     warn "Step2 is done!\n";
   }
 
@@ -148,7 +150,7 @@ sub CRM_vs_CRM {
     warn "Step3.1 msIMM prediction ...\n";
     for my $crm (@crmNames){
       warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/msIMMBaseline.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/msIMMBaseline.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step3.1 is done!\n";
 
@@ -172,7 +174,7 @@ sub CRM_vs_CRM {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/msIMM_SVM.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/msIMM_SVM.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step4.1 is done!\n";
 
@@ -196,7 +198,7 @@ sub CRM_vs_CRM {
     warn "Step5.1 IMM-RF prediction...\n";
     for my $crm (@crmNames){
       warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/msIMM_RF.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/msIMM_RF.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step5.1 is done!\n";
 
@@ -219,8 +221,8 @@ sub CRM_vs_CRM {
     warn "Step6.1 generate kmer features for kmerSVM...\n";
     for my $crm (@crmNames)
     {
-      warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/kmerSVMFeature.pl $crm $outdir $times`;
+      warn "$crm\n"; 
+      `perl $Bin/CRM_vs_CRM/kmerSVMFeature.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step6.1 is done!\n";
   }
@@ -237,7 +239,7 @@ sub CRM_vs_CRM {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/kmerSVM.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/kmerSVM.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step7.1 is done!\n";
 
@@ -262,7 +264,7 @@ sub CRM_vs_CRM {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_CRM/ensembleModel.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_CRM/ensembleModel.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step8.1 is done!\n";
 
@@ -280,13 +282,15 @@ sub CRM_vs_CRM {
 }
 
 
-#================= 
+#================================================================================
+#
 # Task: CRM_vs_bkg 
-#=================
+#
+#================================================================================
 sub CRM_vs_bkg {
 
   my @crmNames = (); # an array to store CRMnames
-  open IN,$crmLst;
+  open IN,$crmLst or die "cannot open $crmLst";
   while (<IN>)
   {
     chomp(my $indir = $_);
@@ -305,7 +309,7 @@ sub CRM_vs_bkg {
     warn "Step1 ----------------------------------\n";
     warn "prepare Model And Data...\n";
 
-    open IN,$crmLst;
+    open IN,$crmLst or die "cannot open $crmLst";
     while (<IN>)
     {
       chomp(my $indir = $_);
@@ -313,7 +317,7 @@ sub CRM_vs_bkg {
       `mkdir -p $outdir/$crm`;
       warn "train IMM model on $crm\n";
       my $prepareModelAndData = "$Bin/CRM_vs_bkg/prepareModelAndData.pl";
-      `perl $prepareModelAndData $Bin/../sampleData/$indir $outdir $times`;
+      `perl $prepareModelAndData $Bin/../sampleData/$indir $outdir $ktimes $nfolds`;
     }
     close IN;
     warn "Step1 is done!\n";
@@ -330,9 +334,9 @@ sub CRM_vs_bkg {
     for my $crm (@crmNames)
     {
      warn "$crm\n";
-     for (my $k=1;$k<=$times;$k++)
+     for (my $k=1;$k<=$ktimes;$k++)
      {
-       for (my $i=1;$i<=5;$i++)
+       for (my $i=1;$i<=$nfolds;$i++)
        {
           warn "time $k fold $i\n";
           `perl $Bin/CRM_vs_bkg/generateIMMScoreFeature.pl $crm $outdir $k $i`;
@@ -340,7 +344,7 @@ sub CRM_vs_bkg {
      }
     }
     # filter CRM training seq that are in the same group as test seq
-    `perl $Bin/CRM_vs_bkg/filterGroupCRM.pl $datadir $outdir $crmGroupTable $times`;
+    `perl $Bin/CRM_vs_bkg/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
     warn "Step2 is done!\n";
   }
 
@@ -355,7 +359,7 @@ sub CRM_vs_bkg {
     warn "Step3.1 msIMM baseline...\n";
     for my $crm (@crmNames){
       warn "$crm\n";
-      `perl $Bin/CRM_vs_bkg/msIMMBaseline.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/msIMMBaseline.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step3.1 is done!\n";
 
@@ -379,7 +383,7 @@ sub CRM_vs_bkg {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_bkg/msIMM_SVM.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/msIMM_SVM.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step4.1 is done!\n";
 
@@ -403,7 +407,7 @@ sub CRM_vs_bkg {
     warn "Step5.1 IMM-RF prediction...\n";
     for my $crm (@crmNames){
       warn "$crm\n";
-      `perl $Bin/CRM_vs_bkg/msIMM_RF.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/msIMM_RF.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step5.1 is done!\n";
 
@@ -428,7 +432,7 @@ sub CRM_vs_bkg {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_bkg/kmerSVMFeature.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/kmerSVMFeature.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step6.1 is done!\n";
   }
@@ -444,7 +448,7 @@ sub CRM_vs_bkg {
     warn "Step7.1 kmerSVM prediction...\n";
     for my $crm (@crmNames)
     {
-      `perl $Bin/CRM_vs_bkg/kmerSVM.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/kmerSVM.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step7.1 is done!\n";
 
@@ -469,7 +473,7 @@ sub CRM_vs_bkg {
     for my $crm (@crmNames)
     {
       warn "$crm\n";
-      `perl $Bin/CRM_vs_bkg/ensembleModel.pl $crm $outdir $times`;
+      `perl $Bin/CRM_vs_bkg/ensembleModel.pl $crm $outdir $ktimes $nfolds`;
     }
     warn "Step8.1 is done!\n";
 
@@ -519,7 +523,9 @@ sub combine_auc {
   close OUT;
 }
 
-
+#=============
+# main routine
+#=============
 sub IMMBoost {
   if ($task eq "crm_vs_bkg"){
     CRM_vs_bkg();

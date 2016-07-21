@@ -17,19 +17,19 @@ use List::Util qw(first max maxstr min minstr reduce shuffle sum);
 use FindBin qw($Bin);
 
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 my $crm = $ARGV[0];
 my $outdir = $ARGV[1];
 my $times = $ARGV[2];
-
+my $nfolds = $ARGV[3];
 
 # 10trials
 for (my $k=1;$k<=$times;$k++)
 {
     warn "time $k ...\n";
     # 5folds
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         my $homeDir = "$outdir/$crm/time$k/fold$i";
 
@@ -127,7 +127,7 @@ for (my $k=1;$k<=$times;$k++)
 {
     # `mkdir $tmpModelDir/time$k` unless (-e "$tmpModelDir/time$k");
 
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         my $homeDir ="$outdir/$crm/time$k/fold$i";
         open AUC,"$homeDir/blend.test.pred.auc" or die "cannot open $homeDir/blend.test.pred.auc\n";
@@ -140,7 +140,7 @@ for (my $k=1;$k<=$times;$k++)
         close AUC;
     }
 }
-my $averageAUC = $sumAUC / (5 * $times);
+my $averageAUC = $sumAUC / ($nfolds * $times);
 print OUT "$averageAUC\n";
 close OUT;
 

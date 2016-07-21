@@ -15,7 +15,7 @@ use warnings;
 use File::Basename;
 use FindBin qw($Bin);
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 my $libsvm = "$Bin/libsvmPval.py";
 my $liblinear = "$Bin/libPval.py";
@@ -25,12 +25,13 @@ my $sub = "$Bin/../../src/libsvm-3.21/tools/subset.py";
 my $crm = $ARGV[0];
 my $outdir = $ARGV[1];
 my $times = $ARGV[2];
+my $nfolds = $ARGV[3];
 
 
 for (my $k=1;$k<=$times;$k++)
 {
     warn "time $k...\n";
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         # warn "$k, $i\n";
         my $homeDir = "$outdir/$crm/time$k/fold$i";
@@ -86,7 +87,7 @@ open OUT,">$outdir/$crm/IMM_SVM.average.auc";
 my $sumAUC = 0;
 for (my $k=1;$k<=$times;$k++)
 {
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         my $homeDir = "$outdir/$crm/time$k/fold$i";
         open AUC,"$homeDir/test.ensembFeat.lib.scaled.svm.pred.label.auc" or die "cannot open $homeDir/test.ensembFeat.lib.scaled.svm.pred.label.auc\n";
@@ -100,6 +101,6 @@ for (my $k=1;$k<=$times;$k++)
         close AUC;
     }
 }
-my $averageAUC = $sumAUC / (5*$times);
+my $averageAUC = $sumAUC / ($nfolds*$times);
 print OUT "$averageAUC\n";
 close OUT;

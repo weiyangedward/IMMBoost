@@ -16,12 +16,13 @@ use File::Basename;
 use FindBin qw($Bin);
 
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 
 my $crm = $ARGV[0]; # CRMname
 my $outdir = $ARGV[1]; # outdir
 my $times = $ARGV[2];
+my $nfolds = $ARGV[3];
 
 
 sub pred {
@@ -31,7 +32,7 @@ sub pred {
         warn "time $k\n";
 
         # 5folds
-        for (my $i=1;$i<=5;$i++) 
+        for (my $i=1;$i<=$nfolds;$i++) 
         {    
             my $homeDir = "$outdir/$crm/time$k/fold$i";
 
@@ -52,7 +53,7 @@ sub pred {
     for (my $k=1;$k<=$times;$k++)
     {
         # 5folds
-        for (my $i=1;$i<=5;$i++)
+        for (my $i=1;$i<=$nfolds;$i++)
         { 
             my $homeDir = "$outdir/$crm/time$k/fold$i";
             open AUC,"$homeDir/test.ensembFeat.pred.auc" or die "cannot open $homeDir/test.ensembFeat.pred.auc\n";
@@ -65,7 +66,7 @@ sub pred {
             close AUC;
         }
     }
-    my $averageAUC = $sumAUC / (5*$times); # average over 10 trials x 5-folds
+    my $averageAUC = $sumAUC / ($nfolds*$times); # average over 10 trials x 5-folds
     print OUT "$averageAUC\n";
     close OUT; 
 }

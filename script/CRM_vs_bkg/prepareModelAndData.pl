@@ -20,11 +20,12 @@ use POSIX;
 
 # die "Usage:\n\tperl $0 CRMdir Outdir\n" unless @ARGV==2;
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 my $crmDir = $ARGV[0]; # CRMdir
 my $outdir = $ARGV[1];
 my $times = $ARGV[2];
+my $nfolds = $ARGV[3];
 
 # relative paths to IMM
 my $train = "$Bin/../../src/imm/bin/imm_build";
@@ -119,11 +120,11 @@ sub sepData {
         my $negEnd = 0;
 
         # 5 fold
-        for (my $i = 1; $i <= 5; $i ++)
+        for (my $i = 1; $i <= $nfolds; $i ++)
         {
             # use start and end index to get testing and training set from CRM and neg id array
-            $crmEnd = floor(($i/5) * $crmNum) - 1;
-            $negEnd = floor(($i/5) * $negNum) - 1;
+            $crmEnd = floor(($i/$nfolds) * $crmNum) - 1;
+            $negEnd = floor(($i/$nfolds) * $negNum) - 1;
             # output positive data
             open OUT1,">$outdir/$crm/time$k/fold$i/test.crm.fasta";
             open OUT2,">$outdir/$crm/time$k/fold$i/train.crm.fasta";

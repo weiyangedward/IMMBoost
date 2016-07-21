@@ -24,12 +24,13 @@ my $train = "$Bin/../../src/imm/bin/imm_build";
 my $pred = "$Bin/../../src/imm/bin/imm_score";
 
 
-die `pod2text $0` if (@ARGV!=3);
+die `pod2text $0` if (@ARGV!=4);
 
 
 my $crmName = $ARGV[0]; # CRMname
 my $outdir = $ARGV[1]; # outdir
 my $times = $ARGV[2];
+my $nfolds = $ARGV[3];
 
 my $crmDir = "$outdir/$crmName";
 
@@ -44,7 +45,7 @@ for (my $k=1;$k<=$times;$k++)
     # `mkdir $tmpModelDir/time$k` unless (-e "$tmpModelDir/time$k");
     warn "time $k ...\n";
     # 5 fold
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         # my $curDir = "$tmpModelDir/time$k/fold$i";
         # `mkdir $curDir` unless (-e "$curDir");
@@ -90,7 +91,7 @@ my $sumAUC = 0;
 for (my $k=1;$k<=$times;$k++)
 {
     # 5 fold
-    for (my $i=1;$i<=5;$i++)
+    for (my $i=1;$i<=$nfolds;$i++)
     {
         # my $homeDir = "$tmpModelDir/time$k/fold$i";
         my $homeDir = "$crmDir/time$k/fold$i";
@@ -104,7 +105,7 @@ for (my $k=1;$k<=$times;$k++)
         close AUC;
     }
 }
-my $aveAUC = $sumAUC / (5*$times);  ## a total of 10x5 AUCs
+my $aveAUC = $sumAUC / ($nfolds*$times);  ## a total of 10x5 AUCs
 # output average AUC to file
 open OUT,">$crmDir/IMM.average.auc";
 print OUT "$aveAUC\n";
