@@ -23,7 +23,9 @@ COPYRIGHT files. Also, source code IMM from SCRMshaw: http://veda.cs.uiuc.edu/SC
 --------------------------
 ::
 
-	(Please un-tar the source code in a directory where the path to this directory does not contain empty space. Otherwise there will be errors while running the code.)
+	(Please un-tar the source code in a directory where the 
+	path to this directory does not contain empty space. 
+	Otherwise there will be errors while running the code.)
 
 	>> cd src
 		
@@ -70,11 +72,11 @@ QuickStart
 	Bkg. Output can be found in folder 'sampleOutput'. Note
 	that although these two pipelines have very similar names
 	among scripts, the implementation can be very different.
-	Please don't simply copy over or attempt to combine scripts
-	have the same names in directory CRM_vs_CRM and CRM_vs_bkg.
-	(Please empty this folder before your new runs! This is 
-	extremely important since not doing so will cause errors 
-	or bugs in the final results.):
+	Please don't simply copy over or attempt to combine 
+	scripts that have the same names in directory CRM_vs_CRM 
+	and CRM_vs_bkg.(Please empty this folder before your new 
+	runs! This is extremely important since not doing so 
+	will cause errors or bugs in the final results.):
 
 	1) CRM vs CRM:
 	>> sh run_crm_vs_crm.sh
@@ -94,7 +96,8 @@ QuickStart
 		+-- IMM_RF.average.auc (average AUC from IMMBoost-RF prediction)
 		+-- ensembleModel.average.auc (average AUC from IMMBoost-Ensemble prediction)
 		+-- kmerSVM.average.auc (average AUC from kmer-SVM prediction)
-		+-- allData/ (CRM and negative seq fasta files and the trained IMM models using this data)
+		+-- allData/ (CRM and negative seq fasta files and 
+					the trained IMM models using this data)
 		+-- time1/ (1st 5-fold cross validation)
 			+
 			+-- fold1/ ()
