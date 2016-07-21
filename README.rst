@@ -171,14 +171,14 @@ QuickStart
                           2) "--task crm_vs_crm": classify CRM from other CRM seq
   
   	--step <str>      What steps to run? default=12345678.
-	                        1. prepare data
-	                        2. IMM score feature
+	                        1. prepare data for n-fold cross validation
+	                        2. generate IMM score feature
 	                        3. IMM prediction
 	                        4. IMM-SVM prediction
 	                        5. IMM-RF prediction 
 	                        6. generate kmer-SVM feature
 	                        7. kmer-SVM prediction
-	                        8. IMM-Ensemble
+	                        8. IMM-Ensemble prediction
   	--nfolds <int>    To perform n-fold cross validation. default=5.
   	--ktimes <int>    To repeat n-fold cross validation for k times. default=2.
 
