@@ -159,6 +159,20 @@ QuickStart
 		subjective to users or biological grouptruth in our case.
 
 
+	Code to generate background sequences with similar
+	length and GC content to query CRMs are included in
+	'./tools/generate_background_seq/'. This code requires 
+	input file such as preprocessed accessible genome 
+	regions with exons and repeats masked. Dmel's accessible 
+	genome with exon masked can be obtained from UCSC. To 
+	mask repeat we used Tandem Repeat Finder: http://tandem.
+	bu.edu/trf/trf.download.html. To run the code on a toy 
+	example:
+
+	>cd tools/generate_background_seq/
+	>sh run.sh
+
+
 3. To Run
 ---------
 ::
