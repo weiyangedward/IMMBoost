@@ -313,6 +313,10 @@ sub CRM_vs_bkg {
     warn "Step1 ----------------------------------\n";
     warn "prepare Model And Data...\n";
 
+    if (-d "$outdir")
+    {
+      `rm -rf $outdir/*`;
+    }
     open IN,$crmLst or die "cannot open $crmLst";
     while (<IN>)
     {
