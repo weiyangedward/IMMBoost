@@ -39,10 +39,6 @@ my $msCRM = "$crmDir/fasta/msCRM.fasta"; # msCRM seq
 # my $msNeg = "$crmDir/fasta/neg.acc.lenGC.100.fasta";
 my $msNeg = $negFa;
 my $crm = (split /\//,$crmDir)[-1];
-if (-d "$outdir/$crm")
-{
-    `rm -rf $outdir/$crm`;
-}
 `mkdir -p $outdir/$crm`;
 # global variables
 my (%crmSeq, @crmSeqID, %negSeq, @negSeqID, 

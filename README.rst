@@ -149,12 +149,13 @@ QuickStart
 
 		5) negmsCRM.fasta : Negative msCRM seq for CRM vs CRM task.
 
-	2. sampleOutput/CRM_vs_CRM/ : a directory of output files.
-
-	3. sampleData/CRMsets/ : a directory of input data. 
+	2. sampleData/CRMsets/ : a directory of input data. 
 		Each sub directory contains a CRMset files.
+		When running this code on your own data set,
+		please replace CRM sets in sampleData with your
+		own CRM sets.
 
-	4. CRMGroup.txt : a list of grouping of CRMsets, where 
+	3. CRMGroup.txt : a list of grouping of CRMsets, where 
 		each row is a CRM group with the first column being 
 		the name of a target CRM set.
 		In the task of CRM vs CRM, training data will be 

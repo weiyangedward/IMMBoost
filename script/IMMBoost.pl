@@ -91,6 +91,10 @@ sub CRM_vs_CRM {
 
   if ($step =~/1/)
   {
+    if (-d "$outdir")
+    {
+      `rm -rf $outdir/*`;
+    }
     #============================================
     # Step1:
     # for each CRM set, train a msIMM model and 
@@ -106,7 +110,7 @@ sub CRM_vs_CRM {
       my $crm = (split /\//,$indir)[-1];
       `mkdir -p $outdir/$crm`;
       warn "train IMM model on $crm\n";
-      `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../sampleData/$indir $outdir $ktimes $nfolds`;
+      `perl $Bin/CRM_vs_CRM/prepareModelAndData.pl $Bin/../$indir $outdir $ktimes $nfolds`;
     }
     close IN;
     warn "Step1 is done!\n";
@@ -317,7 +321,7 @@ sub CRM_vs_bkg {
       `mkdir -p $outdir/$crm`;
       warn "train IMM model on $crm\n";
       my $prepareModelAndData = "$Bin/CRM_vs_bkg/prepareModelAndData.pl";
-      `perl $prepareModelAndData $Bin/../sampleData/$indir $outdir $ktimes $nfolds`;
+      `perl $prepareModelAndData $Bin/../$indir $outdir $ktimes $nfolds`;
     }
     close IN;
     warn "Step1 is done!\n";
