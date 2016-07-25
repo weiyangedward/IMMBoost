@@ -3,9 +3,16 @@
   This script uses CRM grouping to filter out closely
    related seq from training data.
 
+   When generating training data to distinguish CRMs of
+    a specific expression domain to the other domains,
+    grouping information of CRM sets are used to
+    filter out negative training set sequences that
+    are in the same group as sequences in the positive
+    training set.
+
 =head1 Usage
 
-  perl filterGroupCRM.pl CRMDir OutDir CRMGroupTable
+  perl filterGroupCRM.pl CRMDir OutDir CRMGroupTable times nfolds
 
 =cut
 
@@ -56,6 +63,8 @@ while (<IN>)
 {
     chomp(my $line = $_);
     my @group = split /\s+/,$line;
+    # group[0] is a unique CRM set
+    # other CRM sets in the same group are put after it
     if ($group[1])
     {
         for my $crmID (@group[1..$#group])
@@ -69,6 +78,8 @@ close IN;
 my %groupCRM2seqID = ();
 for my $crm (keys %crm2group)
 {
+    # add CRMs from each member in the same group 
+    # to the target CRM set
     for my $member (keys %{$crm2group{$crm}})
     {
         for my $seqID (keys %{$crm2seqID{$member}})
@@ -109,7 +120,9 @@ for my $crmName (keys %CRMsets)
                 $seq2labTest{$id} = $lab;
             }
             close LAB;
-            ##====== Create lib file for training data ========##
+            ##=================================
+            # Create lib file for training data 
+            #==================================
             my $trainFile = "$outdir/$crmName/time$k/fold$i/train.ensembFeat";
             open IN,$trainFile or die "cannot open $trainFile";
             open OUT1,">$outdir/$crmName/time$k/fold$i/train.ensembFeat.filGroup2";
@@ -122,6 +135,7 @@ for my $crmName (keys %CRMsets)
                 else{
                     my @array = split /\s+/,$line;
                     my $seqID = (split(/\_/,$array[0],2))[1];
+                    # positive example, label = 1
                     if ($seq2labTrain{$array[0]} == 1){
                         print OUT1 "$line\n";
                         print OUT2 "1 ";
@@ -130,7 +144,9 @@ for my $crmName (keys %CRMsets)
                         }
                         print OUT2 "\n";
                     }
+                    # negative example, label = -1
                     else{
+                        # filter CRMs in the same group as positive CRMs
                         if (!exists $groupCRM2seqID{$crmName}{$seqID}){
                             print OUT1 "$line\n";
                             print OUT2 "-1 ";

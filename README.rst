@@ -155,8 +155,17 @@ QuickStart
 		Each sub directory contains a CRMset files.
 
 	4. CRMGroup.txt : a list of grouping of CRMsets, where 
-		each row is a group. How to define a "group" would be 
-		subjective to users or biological grouptruth in our case.
+		each row is a CRM group with the first column being 
+		the name of a target CRM set.
+		In the task of CRM vs CRM, training data will be 
+		generated using CRM grouping information of CRM sets to
+    	filter negative training set sequences that
+    	are in the same group as those in the positive
+    	training set. How to define a "group" would be subjective 
+    	to users or biological ground truth in our case.
+    	If you don't have a proper defined group for a target
+    	CRM set, you can have only one column at each row,
+    	so that the CRM grouping information won't be used.
 
 
 	Code to generate background sequences with similar

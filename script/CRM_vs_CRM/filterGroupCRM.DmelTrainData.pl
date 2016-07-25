@@ -1,9 +1,28 @@
+=head1 Description
+  
+  This script uses CRM grouping to filter out closely
+   related seq from training data.
+
+   When generating training data to distinguish CRMs of
+    a specific expression domain to the other domains,
+    grouping information of CRM sets are used to
+    filter out negative training set sequences that
+    are in the same group as sequences in the positive
+    training set.
+
+=head1 Usage
+
+  perl filterGroupCRM.DmelTrainData.pl CRMDir OutDir CRMGroupTable times nfolds
+
+=cut
+
 use strict;
 use warnings;
 use File::Basename;
 use Bio::SeqIO;
 
-die "Usage: perl $0 CRMDir OutDir CRMGroupTable\n" unless @ARGV==5;
+die `pod2text $0` if (@ARGV!=5);
+# die "Usage: perl $0 CRMDir OutDir CRMGroupTable\n" unless @ARGV==5;
 
 my $CRMDir = $ARGV[0];
 my $outdir = $ARGV[1];

@@ -1,6 +1,6 @@
 =head1 Description
-  
-  This script creates cross validation sets for
+    
+    This script creates cross validation sets for
     classification test with CRMs of one specific expression
     domain as positive data and other CRMs as negative data.
     Note that BioPerl is needed.
@@ -34,6 +34,10 @@ my $negFa = "$crmDir/fasta/negCRM.fasta";
 my $msCRM = "$crmDir/fasta/msCRM.fasta";
 my $msNeg = "$crmDir/fasta/negmsCRM.fasta";
 my $crm = (split /\//,$crmDir)[-1];
+if (-d $outdir/$crm)
+{
+    `rm -rf $outdir/$crm`;
+}
 `mkdir -p $outdir/$crm`;
 my (%crmSeq,@crmSeqID,%negSeq,@negSeqID,
     $crmNum,$negNum,@crmSeqIDrand,@negSeqIDrand);
