@@ -75,8 +75,8 @@ QuickStart
 	Please don't simply copy over or attempt to combine 
 	scripts that have the same names in directory CRM_vs_CRM 
 	and CRM_vs_bkg.(Please empty this folder before your new 
-	runs! This is extremely important since not doing so 
-	will cause errors or bugs in the final results.):
+	runs, although the code will do this for you if it finds
+	the direcotry is pre-existed.):
 
 	1) CRM vs CRM:
 	>> sh run_crm_vs_crm.sh
