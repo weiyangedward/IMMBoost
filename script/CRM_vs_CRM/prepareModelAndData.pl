@@ -34,7 +34,7 @@ my $negFa = "$crmDir/fasta/negCRM.fasta";
 my $msCRM = "$crmDir/fasta/msCRM.fasta";
 my $msNeg = "$crmDir/fasta/negmsCRM.fasta";
 my $crm = (split /\//,$crmDir)[-1];
-if (-d $outdir/$crm)
+if (-d "$outdir/$crm")
 {
     `rm -rf $outdir/$crm`;
 }
