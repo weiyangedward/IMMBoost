@@ -155,19 +155,6 @@ QuickStart
 		please replace CRM sets in sampleData with your
 		own CRM sets.
 
-	3. CRMGroup.txt : a list of grouping of CRMsets, where 
-		each row is a CRM group with the first column being 
-		the name of a target CRM set.
-		In the task of CRM vs CRM, training data will be 
-		generated using CRM grouping information of CRM sets to
-		filter negative training set sequences that
-		are in the same group as those in the positive
-		training set. How to define a "group" would be subjective 
-		to users or biological ground truth in our case.
-		If you don't have a proper defined group for a target
-		CRM set, you can have only one column at each row,
-		so that the CRM grouping information won't be used.
-
 
 	Code to generate background sequences with similar
 	length and GC content to query CRMs are included in
@@ -182,12 +169,38 @@ QuickStart
 	>cd tools/generate_background_seq/
 	>sh run.sh
 
+3. Data Set
+-----------
+::
 
-3. To Run
+	Supplementary Data refered by the main text of 
+	IMMBoost paper is also inlcuded here:
+
+	Data S1: 38 CRM sets. These are the input data used to train and evaluate our 
+	classifiers. 36 out of 38 CRM sets are borrowed from (Kazemian et al., 2014), 
+	and we added two additional CRM sets: mapping3.adult and mapping3.larva. Each 
+	CRM set contains CRM sequences of D. melanogaster at a specific expression 
+	domain (CRM.fasta), multi-species CRM sequences of D. melanogaster and other 10 (
+	D.sim, D.sec, D.yak, D.ere, D.ana, D.pse, D.per, D.moj, D.vir, D.gri) Drosophila 
+	species at a specific expression domain (msCRM.fasta), random genomic sequences (
+	randomGenomicSeq.fasta), CRMs sequences of D. melanogaster in other expression 
+	domains (negCRM.fasta), and multi-species CRM sequences in other expression 
+	domains (negmsCRM.fasta). 
+
+	Data S2: Accessible inter-genic genomic regions at stage 5 of D. melanogaster 
+	embryonic development. This data set was used to generate random genomic 
+	sequences as negative training sets while training classifiers to distinguish 
+	CRMs from random genomic regions. DNA-accessibility information was taken from 
+	DNase I Hypersensitivity (DHS) peaks at stage 5 of D. melanogaster development. 
+	We also masked repeats in these regions using Tandem Repeats Finder.
+
+
+
+4. To Run
 ---------
 ::
 
-	perl IMMBoost.pl [options] CRMList Outdir Datadir crmGroupTable
+	perl IMMBoost.pl [options] CRMList Outdir Datadir
 
      --task <str>      What task to perform? default=crm_vs_crm. There are two modes:
                           1) "--task crm_vs_bkg": classify CRM from background 

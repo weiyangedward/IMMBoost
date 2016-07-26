@@ -38,17 +38,17 @@ for (my $k=1;$k<=$times;$k++)
         my $homeDir = "$outdir/$crm/time$k/fold$i";
         
         # create scale range from training data
-        `$scale -s $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.filGroup2.lib > $homeDir/train.ensembFeat.lib.scaled`;
+        `$scale -s $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.lib > $homeDir/train.ensembFeat.lib.scaled`;
         `$sub $homeDir/train.ensembFeat.lib.scaled 10 $homeDir/train.ensembFeat.lib.scaled.sub1 $homeDir/train.ensembFeat.lib.scaled.sub2`;
         # scale test data using scale range
-        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/test.ensembFeat.filGroup2.lib > $homeDir/test.ensembFeat.lib.scaled`;
+        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/test.ensembFeat.lib > $homeDir/test.ensembFeat.lib.scaled`;
 
         `python $liblinear $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.lib.scaled.sub1 > $homeDir/liblinear.log`;
         # `python $libsvm $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.lib.scaled.sub1 > $homeDir/liblinear.log`;
 
         # store label and pred score
         my @label = ();
-        open TEST,"$homeDir/test.ensembFeat.filGroup2.lib" or die "cannot open $homeDir/test.ensembFeat.filGroup2.lib";
+        open TEST,"$homeDir/test.ensembFeat.lib" or die "cannot open $homeDir/test.ensembFeat.lib";
         while (<TEST>)
         {
             chomp(my $line = $_);

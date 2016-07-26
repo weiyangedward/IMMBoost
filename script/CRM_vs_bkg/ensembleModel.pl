@@ -41,7 +41,7 @@ for (my $k=1;$k<=$times;$k++)
 
         ##=== read the order of RF's test data ===
         my %id2pos = ();
-        open IN,"$homeDir/test.ensembFeat.filGroup2" or die "cannot open $homeDir/test.ensembFeat.filGroup2";
+        open IN,"$homeDir/test.ensembFeat" or die "cannot open $homeDir/test.ensembFeat";
         my $pos = 0;
         while (my $line = <IN>)
         {

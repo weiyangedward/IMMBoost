@@ -161,7 +161,9 @@ for my $crmName (keys %CRMsets)
             close OUT1;
             close OUT2;
             close IN;
-            ##====== create lib format for test data =========##
+            ##=============================== 
+            # create lib format for test data 
+            #================================
             my $testFile = "$outdir/$crmName/time$k/fold$i/test.ensembFeat";
             open IN,$testFile or die "cannot open $testFile";
             open OUT1,">$outdir/$crmName/time$k/fold$i/test.ensembFeat.filGroup2";

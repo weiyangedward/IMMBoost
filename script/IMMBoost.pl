@@ -4,7 +4,7 @@
 
 =head1 Usage:
 
-  perl IMMBoost.pl [options] CRMList Outdir Datadir crmGroupTable
+  perl IMMBoost.pl [options] CRMList Outdir Datadir
 
   --task <str>      What task to perform? default=crm_vs_crm. There are two modes:
                           1) "--task crm_vs_bkg": classify CRM from background 
@@ -25,7 +25,7 @@
 
 =head1 Example:
 
-  perl IMMBoost.pl -task crm_vs_bkg CRMsetsList.txt ../sampleOutput/CRM_vs_bkg/ ../sampleData/CRMsets/ CRM.group.V3.txt
+  perl IMMBoost.pl -task crm_vs_bkg CRMsetsList.txt ../sampleOutput/CRM_vs_bkg/ ../sampleData/CRMsets/
 
 =cut 
 
@@ -48,12 +48,12 @@ GetOptions(
   "ktimes:i"=>\$ktimes
 );
 
-die `pod2text $0` if (@ARGV<4);
+die `pod2text $0` if (@ARGV<3);
 
 my $crmLst = $ARGV[0]; # a list file contains path to the dir of CRM datasets
 my $outdir = $ARGV[1]; # outdir
 my $datadir = $ARGV[2];
-my $crmGroupTable = $ARGV[3];
+# my $crmGroupTable = $ARGV[3];
 
 #==============================
 # check if BioPerl is installed
@@ -136,11 +136,11 @@ sub CRM_vs_CRM {
         }
       }
     }
-    warn "filter msCRMs in the same group...\n";
-    `perl $Bin/CRM_vs_CRM/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
+    # warn "filter msCRMs in the same group...\n";
+    # `perl $Bin/CRM_vs_CRM/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
 
-    warn "filter Dmel CRMs in the same group...\n";
-    `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
+    # warn "filter Dmel CRMs in the same group...\n";
+    # `perl $Bin/CRM_vs_CRM/filterGroupCRM.DmelTrainData.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
     warn "Step2 is done!\n";
   }
 
@@ -352,7 +352,7 @@ sub CRM_vs_bkg {
      }
     }
     # filter CRM training seq that are in the same group as test seq
-    `perl $Bin/CRM_vs_bkg/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
+    # `perl $Bin/CRM_vs_bkg/filterGroupCRM.pl $datadir $outdir $crmGroupTable $ktimes $nfolds`;
     warn "Step2 is done!\n";
   }
 

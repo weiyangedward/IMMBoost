@@ -95,7 +95,7 @@ sub createDir{
     {
         `mkdir -p $outdir/$crm/time$k/`;
         # 5 fold
-        for (my $i = 1; $i<=5; $i++)
+        for (my $i = 1; $i<=$nfolds; $i++)
         {
            `mkdir -p $outdir/$crm/time$k/fold$i`;
         }

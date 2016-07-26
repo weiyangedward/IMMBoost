@@ -28,6 +28,9 @@ my $modelDir = $ARGV[1];
 my $timeNum = $ARGV[2];
 my $foldNum = $ARGV[3];
 
+my %train_seq_label = ();
+my %test_seq_label = ();
+
 # get CRMnames
 my @crmNames;
 sub getNames 
@@ -247,10 +250,16 @@ sub pred {
                 `rm $homeDir/$otherCRM.neg.model`;
             }
         }
+
+        # read in train and test seq labels
+        read_labels();
         ##==========================================
         # Output IMM features for training sequences 
         #===========================================
         open OUT1,">$homeDir/train.ensembFeat";
+        open TRAIN_lib,">$homeDir/train.ensembFeat.lib";
+        open TRAIN_lib_DMEL,">$homeDir/train.ensembFeat.Dmel.lib";
+
         print OUT1 "crm\t";
         for my $crm (sort @crmNames){
             print OUT1 "$crm\t";
@@ -260,35 +269,111 @@ sub pred {
         for my $id (sort keys %{$output{"train"}})
         {
             print OUT1 "$id\t";
+            if ($train_seq_label{$id} eq "1")
+            {
+                print TRAIN_lib "1 ";
+                if ($id =~ /^Dmel/)
+                {
+                    print TRAIN_lib_DMEL "1 ";
+                }
+            }
+            else
+            {
+                print TRAIN_lib "-1 ";
+                if ($id =~ /^Dmel/)
+                {
+                    print TRAIN_lib_DMEL "-1 ";
+                }
+            }
+
+            my $feature_count = 1;
             for my $crm (sort keys %{$output{"train"}{$id}})
             {
                 my @score = split /\s+/,$output{"train"}{$id}{$crm};
                 print OUT1 "$score[1]\t";
+                print TRAIN_lib "$feature_count\:$score[1] ";
+                if ($id =~ /^Dmel/)
+                {
+                    print TRAIN_lib_DMEL "$feature_count\:$score[1] ";
+                }
+                $feature_count++;
             }
             print OUT1 "\n";
+            print TRAIN_lib "\n";
+            
+            if ($id =~ /^Dmel/)
+            {
+                print TRAIN_lib_DMEL "\n";
+            }
         }
         close OUT1;
+        close TRAIN_lib;
+        close TRAIN_lib_DMEL;
 
         ##======================================
         # output test seq msIMM features to file 
         #=======================================
         open OUT2,">$homeDir/test.ensembFeat";
+        open TEST_lib,">$homeDir/test.ensembFeat.lib";
+        open TEST_lib_DMEL,">$homeDir/test.ensembFeat.Dmel.lib";
+
         print OUT2 "crm\t";
         for my $crm (sort @crmNames){
             print OUT2 "$crm\t";
         }
         print OUT2 "\n";
+
         for my $id (sort keys %{$output{"test"}})
         {
             print OUT2 "$id\t";
+            if ($test_seq_label{$id} eq "1")
+            {
+                print TEST_lib "1 ";
+                print TEST_lib_DMEL "1 ";
+            }
+            else
+            {
+                print TEST_lib "-1 ";
+                print TEST_lib_DMEL "-1 ";
+            }
+
+            my $feature_count = 1;
             for my $crm (sort keys %{$output{"test"}{$id}})
             {
                 my @score = split /\s+/,$output{"test"}{$id}{$crm};
                 print OUT2 "$score[1]\t";
+                print TEST_lib "$feature_count\:$score[1] ";
+                print TEST_lib_DMEL "$feature_count\:$score[1] ";
+                $feature_count++;
             }
             print OUT2 "\n";
+            print TEST_lib "\n";
+            print TEST_lib_DMEL "\n";
         }
         close OUT2;
+        close TEST_lib;
+        close TEST_lib_DMEL;
+}
+
+sub read_labels {
+    my $train_label_file = "$modelDir/$crm/time$timeNum/fold$foldNum/train.label";
+    my $test_label_file = "$modelDir/$crm/time$timeNum/fold$foldNum/test.label";
+
+    open LAB,$train_label_file or die "cannot open $train_label_file";
+    while (<LAB>){
+        chomp(my $line = $_);
+        my ($id, $lab) = split /\s+/,$line;
+        $train_seq_label{$id} = $lab;
+    }
+    close LAB;
+
+    open LAB,$test_label_file or die "cannot open $test_label_file";
+    while (<LAB>){
+        chomp(my $line = $_);
+        my ($id, $lab) = split /\s+/,$line;
+        $test_seq_label{$id} = $lab;
+    }
+    close LAB;
 }
 
 # call functions

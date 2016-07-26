@@ -1,3 +1,0 @@
-mapping0.dv_neurogenicectoderm
-mapping1.mesectoderm
-mapping2.malpig

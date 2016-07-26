@@ -38,22 +38,22 @@ for (my $k=1;$k<=$times;$k++)
         ##======================
         # prepare inputs for svm
         #=======================
-        `$scale -s $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.filGroup2.lib > $homeDir/train.ensembFeat.lib.scaled`;
-        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/test.ensembFeat.filGroup2.lib > $homeDir/test.ensembFeat.lib.scaled`;
-        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.filGroup2.Dmel.lib > $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled`;
+        `$scale -s $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.lib > $homeDir/train.ensembFeat.lib.scaled`;
+        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/test.ensembFeat.lib > $homeDir/test.ensembFeat.lib.scaled`;
+        `$scale -r $homeDir/train.ensembFeat.lib.range $homeDir/train.ensembFeat.Dmel.lib > $homeDir/train.ensembFeat.Dmel.lib.scaled`;
         ##======================================================
         # train IMM-SVM and predict on test data using liblinear
         #=======================================================
-        `python $liblinear $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled 2>$homeDir/liblinear.log`;
+        `python $liblinear $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.Dmel.lib.scaled 2>$homeDir/liblinear.log`;
 
         #====================================================
         # train IMM-SVM and predict on test data using libsvm
         #====================================================
         # warn "train IMM-SVM and predict on test data...\n";
-        # `python $libsvm $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.filGroup2.Dmel.lib.scaled 2>$homeDir/liblinear.log`;
+        # `python $libsvm $homeDir/train.ensembFeat.lib.scaled $homeDir/test.ensembFeat.lib.scaled $homeDir/train.ensembFeat.lib.scaled.model $homeDir/test.ensembFeat.lib.scaled.pred.confidentScore $homeDir/train.ensembFeat.Dmel.lib.scaled 2>$homeDir/liblinear.log`;
 
         my @label = ();
-        open TEST,"$homeDir/test.ensembFeat.filGroup2.lib" or die "cannot open $homeDir/test.ensembFeat.filGroup2.lib";
+        open TEST,"$homeDir/test.ensembFeat.lib" or die "cannot open $homeDir/test.ensembFeat.lib";
         while (<TEST>){
             chomp(my $line = $_);
             my @array = split /\s+/,$line;

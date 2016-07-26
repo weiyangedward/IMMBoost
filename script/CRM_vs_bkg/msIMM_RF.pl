@@ -37,10 +37,10 @@ sub pred {
             my $homeDir = "$outdir/$crm/time$k/fold$i";
 
             # generate label files
-            `awk \'{print \$1}\' $homeDir/train.ensembFeat.filGroup2.lib > $homeDir/train.ensembFeat.lib.lab`;
-            `awk \'{print \$1}\' $homeDir/test.ensembFeat.filGroup2.lib > $homeDir/test.ensembFeat.lib.lab`;
+            `awk \'{print \$1}\' $homeDir/train.ensembFeat.lib > $homeDir/train.ensembFeat.lib.lab`;
+            `awk \'{print \$1}\' $homeDir/test.ensembFeat.lib > $homeDir/test.ensembFeat.lib.lab`;
             # train randomforest and pred on test data
-            `Rscript $Bin/randomForest.R $homeDir/train.ensembFeat.filGroup2 $homeDir/train.ensembFeat.lib.lab $homeDir/test.ensembFeat.filGroup2 $homeDir/test.ensembFeat.lib.lab $homeDir/test.ensembFeat.pred $homeDir/train.ensembFeat.modelImportance`;
+            `Rscript $Bin/randomForest.R $homeDir/train.ensembFeat $homeDir/train.ensembFeat.lib.lab $homeDir/test.ensembFeat $homeDir/test.ensembFeat.lib.lab $homeDir/test.ensembFeat.pred $homeDir/train.ensembFeat.modelImportance`;
             # compute AUC scores
             `Rscript $Bin/auc.R $homeDir/test.ensembFeat.pred $homeDir/test.ensembFeat.pred.auc`;
         }
