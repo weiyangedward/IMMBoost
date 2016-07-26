@@ -173,8 +173,8 @@ QuickStart
 -----------
 ::
 
-	Supplementary Data refered by the main text of 
-	IMMBoost paper is also inlcuded here:
+	Supplementary data (Data S1 and S2) mentioned in the main text of 
+	IMMBoost paper is also inlcuded in this repository:
 
 	Data S1: 38 CRM sets. These are the input data used to train and evaluate our 
 	classifiers. 36 out of 38 CRM sets are borrowed from (Kazemian et al., 2014), 
